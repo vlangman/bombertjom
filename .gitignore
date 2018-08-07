@@ -1,0 +1,11 @@
+
+build/
+lib/*
+
+#keep lib dir
+!lib/
+
+
+#disgard lib/SDL/build dir
+lib/SDL/build/*
+

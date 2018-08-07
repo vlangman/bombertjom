@@ -1,2 +1,2 @@
 # bombertjom
-Tjoms blowing shit up with glfw and dank memes
+Tjoms blowing shit up with glfw , sdl and dank memes
