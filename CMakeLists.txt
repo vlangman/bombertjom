@@ -38,13 +38,14 @@ if(UNIX AND APPLE)
 	
 	#build sdl dynamic libraries
 	add_custom_target(
-		sdlBuild 
+		sdlBuild
 		COMMAND make
 		WORKING_DIRECTORY ${SDL_INSTALL_DIR}
 	)
 	
+	add_dependencies(bombertjom sdlBuild)
 	#link my libraries to dylibs
-	target_link_libraries(bombertjom "${EXTERNAL_INSTALL_LOCATION}/SDL/build/libSDL2.dylib")
+	target_link_libraries(bombertjom ${EXTERNAL_INSTALL_LOCATION}/SDL/build/libSDL2.dylib)
 
 
 endif()

@@ -1,8 +1,6 @@
-#include <iostream>
-#include <SDL.h>
+#include "SDL.h"
+#include <stdio.h>
 
-int main(void){
-	std::cout << "BOOOOOOOOOOMMMMBER TJOM!!!" << std::endl;
-	return 0;
+int main() {
+	std::cout << "Dank fucken shit right here" << std::endl;
 }
-
