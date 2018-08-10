@@ -1,6 +1,18 @@
-#include "SDL.h"
-#include <stdio.h>
+#include "game.hpp"
 
-int main() {
-	std::cout << "Dank fucken shit right here" << std::endl;
+
+int main(int argc, char **argv) {
+
+	Game game;
+
+
+	//init with verbose enabled
+	if (argc != 3){
+		std::cout << "bad args.. starting game with defaults" << std::endl;
+		game.init();
+	}
+	else
+		game.init(1, std::atoi(argv[1]), std::atoi(argv[2]), 0);
+
+	game.log("he he xD");
 }
