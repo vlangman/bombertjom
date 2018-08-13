@@ -45,13 +45,24 @@ int Game::getVerbose(void) const{
 
 int 	Game::runLoop(void){
 
-	//handle any user input
+	while (m_shouldRun)
+	{
+		mTimer->Update();
+		handleEvents();
 
-	//update all objects (phys calcs)
+		if (mTimer->DeltaTime() >= (1.0f/ frameRate)){
+			//if the delta time is greater than 1/framerate
+			//then you can draw otherwise wait
+			std::cout << "DeltaTime: " << mTimer->DeltaTime() << std::endl;
 
-	//render changes to the display
+			//if render done reset the game timer
+			mTimer->Reset();
+		}
 
-	return 1;
+		sdl.clearScreen();
+		// cleanup the game;
+	}
+	return 0;
 }
 
 void 	Game::init(int _verbose, int width, int height, bool fullscreen){
@@ -60,11 +71,16 @@ void 	Game::init(int _verbose, int width, int height, bool fullscreen){
 	this->window_y = height;
 
 	this->sdl.init(width, height, this->verbose);
+	this->m_shouldRun = true;
 
+	//use instance cuase it creates and resets timer
+	mTimer = Timer::Instance();
 	return;
 }
 
 void	Game::closeGame(void){
+	Timer::Release();
+	mTimer = NULL;
 	exit(1);
 }
 
@@ -80,4 +96,17 @@ void 	Game::log(std::string message){
 		std::cout << message << std::endl;
 	}
 	return;
+}
+
+
+void Game::handleEvents()
+{
+	E_EVENT event = sdl.handleEvents();
+
+	if (event == E_EVENT::EVENT_CLOSE_WINDOW) {
+		std::cout << "CLOSING GAME" << std::endl;
+		closeGame();
+		return;
+	}
+	
 }

@@ -15,4 +15,6 @@ int main(int argc, char **argv) {
 		game.init(1, std::atoi(argv[1]), std::atoi(argv[2]), 0);
 
 	game.log("he he xD");
+	game.runLoop();
+	
 }
