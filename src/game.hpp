@@ -1,6 +1,8 @@
+#pragma once
 #include <iostream>
 #include "sdlLib.hpp"
 #include "timer.hpp"
+#include "gameWorld.hpp"
 
 class Game
 {
@@ -13,6 +15,7 @@ class Game
 		SdlLib	sdl;
 		Timer*	mTimer;
 		const int frameRate = 60;
+		GameWorld gameWorld;
 
 	public:
 

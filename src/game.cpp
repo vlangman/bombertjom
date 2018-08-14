@@ -53,6 +53,7 @@ int 	Game::runLoop(void){
 		if (mTimer->DeltaTime() >= (1.0f/ frameRate)){
 			//if the delta time is greater than 1/framerate
 			//then you can draw otherwise wait
+			//feed delta time into the entities update function to multiply with scalar values i.e movement
 			std::cout << "DeltaTime: " << mTimer->DeltaTime() << std::endl;
 
 			//if render done reset the game timer
@@ -72,6 +73,9 @@ void 	Game::init(int _verbose, int width, int height, bool fullscreen){
 
 	this->sdl.init(width, height, this->verbose);
 	this->m_shouldRun = true;
+	//instantiates the game world
+	this->gameWorld.init();
+	exit(1);
 
 	//use instance cuase it creates and resets timer
 	mTimer = Timer::Instance();
