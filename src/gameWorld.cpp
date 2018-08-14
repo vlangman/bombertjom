@@ -31,41 +31,41 @@ std::vector<std::vector<int>>* GameWorld::getMap(void) const{
 }
 
 
-void GameWorld::readMap(const std::string mapName){
+// void GameWorld::readMap(const std::string mapName){
 	
-	std::string 	myLine;
-	int 			lineCount;
-	int 			colsCount;
+// 	std::string 	myLine;
+// 	int 			lineCount;
+// 	int 			colsCount;
 
 
-	std::ifstream	myFile("../maps/" + mapName);
-	int count = 0;
+// 	std::ifstream	myFile("../maps/" + mapName);
+// 	int count = 0;
 
 
-	if (myFile.is_open()){
+// 	if (myFile.is_open()){
 
-		while (std::getline(myFile, myLine))
-   			++lineCount;
+// 		while (std::getline(myFile, myLine))
+//    			++lineCount;
 
-   		for (int i = 0; myLine[i]; i++){
-   			colsCount++;
-   		}
+//    		for (int i = 0; myLine[i]; i++){
+//    			colsCount++;
+//    		}
 
-		this->m_map->resize(lineCount, std::vector<int>(colsCount, 0));
+// 		this->m_map->resize(lineCount, std::vector<int>(colsCount, 0));
 	
-		while(std::getline(myFile, myLine)){
+// 		while(std::getline(myFile, myLine)){
 		
-			for(int i = 0; myLine[i]; i++){
-				m_map[count][i] = std::atoi(myLine[i]);
-			}
-			count++;
-		}
+// 			for(int i = 0; myLine[i]; i++){
+// 				m_map[count][i] = std::atoi(myLine[i]);
+// 			}
+// 			count++;
+// 		}
 
-	}
-	else{
-		std::cout << "an error occured opening file" << std::endl;
-		return;
-	}
-}
+// 	}
+// 	else{
+// 		std::cout << "an error occured opening file" << std::endl;
+// 		return;
+// 	}
+// }
 
 	

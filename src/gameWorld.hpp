@@ -1,29 +1,28 @@
 #pragma once
-#include <iostream>
 #include <vector>
+#include <iostream>
+
+class Entity;
 
 class GameWorld
 {
-
 private:
-	std::vector<std::vector<int>> *m_map;
-
+    std::vector<Entity*> mEntityList;
+    std::vector<std::vector<int>> *m_map;
 public:
-	GameWorld();
-	~GameWorld();
-
-	GameWorld & operator=(const  GameWorld & _rhs);
+	GameWorld(void);
+	~GameWorld(void);
+	GameWorld & operator=(const GameWorld & _rhs);
 	GameWorld(const GameWorld & _gameworld);
 
+    void update();
+    void draw();
 
-	//game world functions
-	void init(void);
-	std::vector<std::vector<int>> *getMap(void) const;
+    void init(void);
+    std::vector<std::vector<int>> *getMap(void) const;
 
+    //entities
+    std::vector<Entity*> *getEntityList();
+    void addEntity(Entity*);
 
-	//utility
-
-	void readMap(const std::string mapName);
-
-	
 };

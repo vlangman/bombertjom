@@ -3,10 +3,13 @@
 #include <SDL_opengl.h>
 #include <iostream>
 
+class GraphicsComponent;
+
 enum E_COLOR 
 {
 	COLOR_YELLOW,
-	COLOR_RED
+	COLOR_RED,
+	COLOR_GREY
 };
 
 enum E_EVENT 
@@ -49,7 +52,10 @@ class SdlLib {
 		VIRTUAL INHERITED ABSTRACT FUCNTIONS
 	*/
 		void init(int width, int height, bool _verbose);
+		
 		void draw(int x, int y, int width, int height, E_COLOR color);
+		void draw(GraphicsComponent *graphics);
+
 		void clearScreen();
 		void displayScreen();
 		E_EVENT handleEvents();

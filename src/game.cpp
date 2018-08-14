@@ -1,8 +1,12 @@
 #include "game.hpp"
+#include "Builder.hpp"
+#include "Entity.hpp"
+#include "Component.hpp"
 
 //canonical constructors
 Game::Game(void){
 	this->verbose = false;
+	m_shouldRun = true;
 	return;
 }
 
@@ -43,27 +47,47 @@ int Game::getVerbose(void) const{
 
 //game loop functions
 
-int 	Game::runLoop(void){
+int 	Game::runLoop(void)
+{
+	Builder builder(this);
+
+	// Add the player
+	Entity *player = builder.createPlayer(30,30);
+	addEntity(player);
+
+	// Add some walls
+	for (int i = 0; i < 20; i++){
+		Entity *wall = builder.createWall(0,i * 30);
+		addEntity(wall);
+	}
 
 	while (m_shouldRun)
 	{
 		mTimer->Update();
-		handleEvents();
+		E_EVENT event = sdl.handleEvents();
 
-		if (mTimer->DeltaTime() >= (1.0f/ frameRate)){
-			//if the delta time is greater than 1/framerate
-			//then you can draw otherwise wait
-			//feed delta time into the entities update function to multiply with scalar values i.e movement
-			std::cout << "DeltaTime: " << mTimer->DeltaTime() << std::endl;
+		if (event == E_EVENT::EVENT_CLOSE_WINDOW){
+			m_shouldRun = false;
+		}
 
-			//if render done reset the game timer
-			mTimer->Reset();
+		for (auto i: inputHandlers)
+		{
+			i->handleInput(event);
 		}
 
 		sdl.clearScreen();
-		// cleanup the game;
+
+		for (auto i : renderList)
+		{
+			sdl.draw(i->getOwner()->getX(),i->getOwner()->getY(),32,32,i->getColor());
+		}
+
+		if (mTimer->DeltaTime() >= (1.0f/ frameRate)){
+			sdl.displayScreen();
+			mTimer->Reset();
+		}
 	}
-	return 0;
+	return 1;
 }
 
 void 	Game::init(int _verbose, int width, int height, bool fullscreen){
@@ -75,7 +99,7 @@ void 	Game::init(int _verbose, int width, int height, bool fullscreen){
 	this->m_shouldRun = true;
 	//instantiates the game world
 	this->gameWorld.init();
-	exit(1);
+	// exit(1);
 
 	//use instance cuase it creates and resets timer
 	mTimer = Timer::Instance();
@@ -88,7 +112,18 @@ void	Game::closeGame(void){
 	exit(1);
 }
 
-// void	addEntity();
+void	Game::addEntity(Entity *entity)
+{
+	entityList.push_back(entity);
+
+	if (entity->getEntityType() == E_ENTITY_TYPE::ET_PLAYER){
+		renderList.push_back(dynamic_cast<Player*>(entity)->graphics);
+		inputHandlers.push_back(dynamic_cast<Player*>(entity)->inputHandler);
+	}
+	else if (entity->getEntityType() == E_ENTITY_TYPE::ET_WALL){
+		renderList.push_back(dynamic_cast<Wall*>(entity)->graphics);
+	}
+}
 
 // void	cleanup();
 

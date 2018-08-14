@@ -3,6 +3,12 @@
 #include "sdlLib.hpp"
 #include "timer.hpp"
 #include "gameWorld.hpp"
+#include <vector>
+
+
+class PlayerInputComponent;
+class GraphicsComponent;
+class Entity;
 
 class Game
 {
@@ -18,6 +24,9 @@ class Game
 		GameWorld gameWorld;
 
 	public:
+		std::vector<Entity*> entityList;
+		std::vector<PlayerInputComponent*> inputHandlers;
+		std::vector<GraphicsComponent*> renderList;		
 
 		//canonical constructors
 		Game(void);
@@ -37,7 +46,7 @@ class Game
 		void 	handleEvents(void);
 		void	closeGame(void);
 		
-		// void	addEntity();
+		void	addEntity(Entity *entity);
 		// void	cleanup();
 
 		//utility
