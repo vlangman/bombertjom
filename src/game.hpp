@@ -1,5 +1,12 @@
+#pragma once
 #include <iostream>
 #include "sdlLib.hpp"
+#include <vector>
+
+
+class PlayerInputComponent;
+class GraphicsComponent;
+class Entity;
 
 class Game
 {
@@ -12,6 +19,9 @@ class Game
 		SdlLib	sdl;
 
 	public:
+		std::vector<Entity*> entityList;
+		std::vector<PlayerInputComponent*> inputHandlers;
+		std::vector<GraphicsComponent*> renderList;		
 
 		//canonical constructors
 		Game(void);
@@ -26,10 +36,10 @@ class Game
 
 		//game loop functions
 		int 	runLoop(void);
-		void 	init(int _verbose = 0, int width = 500, int height = 500, bool fullscreen = 0);
+		void 	init(int _verbose = 0, int width = 1000, int height = 500, bool fullscreen = 0);
 		void	closeGame(void);
 		
-		// void	addEntity();
+		void	addEntity(Entity *entity);
 		// void	cleanup();
 
 		//utility

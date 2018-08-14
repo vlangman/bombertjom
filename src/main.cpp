@@ -12,7 +12,11 @@ int main(int argc, char **argv) {
 		game.init();
 	}
 	else
+	{
 		game.init(1, std::atoi(argv[1]), std::atoi(argv[2]), 0);
+	}
+
+	game.runLoop();
 
 	game.log("he he xD");
 }

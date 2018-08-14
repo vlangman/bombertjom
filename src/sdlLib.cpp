@@ -1,5 +1,13 @@
 #include "sdlLib.hpp"
-/*
+#include "Component.hpp"
+
+void SdlLib::draw(GraphicsComponent *graphics)
+{
+
+}
+
+/*..
+
 
 	default constructors and deconstructors for canonical form
 */
@@ -97,6 +105,9 @@ void SdlLib::draw(int x, int y, int width, int height, E_COLOR color)
 	}        
 	else if (color == E_COLOR::COLOR_YELLOW){
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+	}
+	else if (color == E_COLOR::COLOR_GREY){
+		SDL_SetRenderDrawColor(renderer, 125, 125, 125, 255);
 	}
 	SDL_RenderFillRect( renderer, &fillRect );
 }
