@@ -20,7 +20,7 @@ class Game
 		bool 	verbose;
 		SdlLib	sdl;
 		Timer*	mTimer;
-		const int frameRate = 60;
+		const int frameRate = 250;
 		GameWorld gameWorld;
 
 	public:
@@ -41,7 +41,7 @@ class Game
 
 		//game loop functions
 		int 	runLoop(void);
-		void 	init(int _verbose = 0, int width = 500, int height = 500, bool fullscreen = 0);
+		void 	init(int _verbose = 0, int width = 1000, int height = 1000, bool fullscreen = 0);
 		
 		void 	handleEvents(void);
 		void	closeGame(void);

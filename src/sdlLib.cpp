@@ -129,21 +129,21 @@ void SdlLib::init(int width, int height, bool _verbose)
 	this->verbose = _verbose;
 	std::cout << width << ":" << height << std::endl;
 	SDL_Init(SDL_INIT_VIDEO);             // Initialize SDL2
-    // Create an application window with the following settings:
-    window = SDL_CreateWindow(
-        "OreWa Bombertjomba desune",      // window title
-        SDL_WINDOWPOS_CENTERED,           // initial x position
-        SDL_WINDOWPOS_CENTERED,           // initial y position
-        width,                            // width, in pixels
-        height,                           // height, in pixels
-        SDL_WINDOW_OPENGL                 // flags - see below
-    );
+	// Create an application window with the following settings:
+	window = SDL_CreateWindow(
+		"OreWa Bombertjomba desune",      // window title
+		SDL_WINDOWPOS_CENTERED,           // initial x position
+		SDL_WINDOWPOS_CENTERED,           // initial y position
+		width,                            // width, in pixels
+		height,                           // height, in pixels
+		SDL_WINDOW_OPENGL                 // flags - see below
+	);
 
 	if (window == NULL) {
-        // In the case that the window could not be made...
-        std::cout << "Could not create window:" << SDL_GetError() << std::endl;
-        exit(1);
-    }
+		// In the case that the window could not be made...
+		std::cout << "Could not create window:" << SDL_GetError() << std::endl;
+		exit(1);
+	}
 
 	renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
 }
@@ -156,4 +156,11 @@ void 	SdlLib::log(std::string message){
 		std::cout << message << std::endl;
 	}
 	return;
+}
+
+void 	SdlLib::drawFps(float fps){
+	std::cout << "FPS: ";
+	std::cout << fps << std::endl;
+	//clear terminal
+	// std::cout << "\x1B[2J\x1B[H";
 }

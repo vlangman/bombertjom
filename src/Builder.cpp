@@ -27,6 +27,7 @@ Entity *Builder::createWall(double x, double y)
 
     // init graphics component
     wall->graphics = new GraphicsComponent(wall, E_COLOR::COLOR_GREY);
+    std::cout << "X: " << x << " Y: " << y << std::endl;
     wall->setPosition(x,y);
     return wall;
 }

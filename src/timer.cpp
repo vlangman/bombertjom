@@ -24,7 +24,7 @@ Timer::~Timer(void){
 	return;
 }
 
-void Timer::Reset(void){
+void Timer::Reset(void) {
 	mStartTicks = SDL_GetTicks();
 	mElapsedTicks = 0;
 	mDeltaTime = 0.0f;

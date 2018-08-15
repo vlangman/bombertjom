@@ -21,12 +21,29 @@ GameWorld::GameWorld(const GameWorld & _gameworld){
 }
 
 
-void GameWorld::init(void){
-	std::cout << "init the game world" << std::endl;
+void GameWorld::init(const  std::string level){
+	std::cout << "init the game world with map " << level << std::endl;
+	std::string myLine;
+	
+	std::ifstream myFile("../maps/" + level);
+	if (myFile.is_open()) {
+		while(getline(myFile, myLine)){
+			std::vector<int> line;
+			for (int i = 0; myLine[i]; i++){
+				line.push_back(myLine[i]);
+			}
+			m_map.push_back(line);
+			line.clear();
+		}
+	}
+	else{
+		std::cout << "an error occured opening file" << std::endl;
+		return;
+	}
 	return;
 }
 
-std::vector<std::vector<int>>* GameWorld::getMap(void) const{
+std::vector<std::vector<int>> GameWorld::getMap(void) const {
 	return this->m_map;
 }
 

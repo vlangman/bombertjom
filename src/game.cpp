@@ -50,15 +50,26 @@ int Game::getVerbose(void) const{
 int 	Game::runLoop(void)
 {
 	Builder builder(this);
+	static int FrameCount;
 
 	// Add the player
 	Entity *player = builder.createPlayer(30,30);
 	addEntity(player);
 
 	// Add some walls
-	for (int i = 0; i < 20; i++){
-		Entity *wall = builder.createWall(0,i * 30);
-		addEntity(wall);
+	// for (int i = 0; i < 20; i++){
+	// 	Entity *wall = builder.createWall(0,i * 30);
+	// 	addEntity(wall);
+	// }
+
+	std::vector<std::vector<int>> map = this->gameWorld.getMap();
+
+	 for (int x = 0; x < map.size(); x++) {
+		for (int y = 0; y < map[x].size(); y++)
+		{
+			Entity *wall = builder.createWall(x,y);
+			addEntity(wall);
+		}
 	}
 
 	while (m_shouldRun)
@@ -81,10 +92,13 @@ int 	Game::runLoop(void)
 		{
 			sdl.draw(i->getOwner()->getX(),i->getOwner()->getY(),32,32,i->getColor());
 		}
-
+		// sdl.displayScreen();
 		if (mTimer->DeltaTime() >= (1.0f/ frameRate)){
+			FrameCount++;
 			sdl.displayScreen();
+			float FPS = 1.0f / mTimer->DeltaTime();
 			mTimer->Reset();
+			// sdl.drawFps(FPS);
 		}
 	}
 	return 1;
@@ -98,10 +112,10 @@ void 	Game::init(int _verbose, int width, int height, bool fullscreen){
 	this->sdl.init(width, height, this->verbose);
 	this->m_shouldRun = true;
 	//instantiates the game world
-	this->gameWorld.init();
+	this->gameWorld.init("test.map");
 	// exit(1);
 
-	//use instance cuase it creates and resets timer
+	//use instance to create and reset timer
 	mTimer = Timer::Instance();
 	return;
 }

@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include <iostream>
+#include "timer.hpp"
 
 class GraphicsComponent;
 
@@ -68,4 +69,5 @@ class SdlLib {
 
 	//utility
 		void log(std::string message);
+		void drawFps(float fps);
 };
