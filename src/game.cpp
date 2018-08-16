@@ -53,22 +53,23 @@ int 	Game::runLoop(void)
 	static int FrameCount;
 
 	// Add the player
-	Entity *player = builder.createPlayer(30,30);
+	Entity *player = builder.createPlayer(32,32);
 	addEntity(player);
 
-	// Add some walls
-	// for (int i = 0; i < 20; i++){
-	// 	Entity *wall = builder.createWall(0,i * 30);
-	// 	addEntity(wall);
-	// }
+	int increment = this->window_x/10;
+	std::cout << increment << std::endl;
 
 	std::vector<std::vector<int>> map = this->gameWorld.getMap();
 
+	// read map from gameworld into game entities
 	 for (int x = 0; x < map.size(); x++) {
 		for (int y = 0; y < map[x].size(); y++)
 		{
-			Entity *wall = builder.createWall(x,y);
-			addEntity(wall);
+			if (map[x][y] == 49)
+			{
+				Entity *wall = builder.createWall(x*increment,y*increment);
+				addEntity(wall);
+			}
 		}
 	}
 
@@ -98,7 +99,9 @@ int 	Game::runLoop(void)
 			sdl.displayScreen();
 			float FPS = 1.0f / mTimer->DeltaTime();
 			mTimer->Reset();
-			// sdl.drawFps(FPS);
+			
+			//write the fps to stdout
+			sdl.drawFps(FPS); 
 		}
 	}
 	return 1;
@@ -112,7 +115,7 @@ void 	Game::init(int _verbose, int width, int height, bool fullscreen){
 	this->sdl.init(width, height, this->verbose);
 	this->m_shouldRun = true;
 	//instantiates the game world
-	this->gameWorld.init("test.map");
+	this->gameWorld.init("test2.map");
 	// exit(1);
 
 	//use instance to create and reset timer
