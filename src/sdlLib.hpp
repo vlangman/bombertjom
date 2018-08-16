@@ -54,7 +54,7 @@ class SdlLib {
 	*/
 		void init(int width, int height, bool _verbose);
 		
-		void draw(int x, int y, int width, int height, E_COLOR color);
+		void draw(int x, int y, double width, double height, E_COLOR color);
 		void draw(GraphicsComponent *graphics);
 
 		void clearScreen();

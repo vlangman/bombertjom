@@ -19,8 +19,8 @@ class Game
 		bool	m_shouldRun;
 		bool 	verbose;
 		SdlLib	sdl;
-		Timer*	mTimer;
-		const int frameRate = 60;
+		Timer*	m_Timer;
+		const int frameRate = 200;
 		GameWorld gameWorld;
 
 	public:
@@ -51,5 +51,6 @@ class Game
 
 		//utility
 		void log(std::string message);
+		float getDeltaTime(void);
 
 };

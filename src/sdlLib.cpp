@@ -95,10 +95,12 @@ E_EVENT SdlLib::handleEvents()
 
 
 
-void SdlLib::draw(int x, int y, int width, int height, E_COLOR color)
+void SdlLib::draw(int x, int y, double width, double height, E_COLOR color)
 {
 	//Render red filled quad
-	SDL_Rect fillRect = { x, y, width, height };
+	int w = static_cast<int>(width);
+	int h = static_cast<int>(height);
+	SDL_Rect fillRect = { x, y, w, h };
 
 	if (color == E_COLOR::COLOR_RED){
 		SDL_SetRenderDrawColor( renderer, 0xFF, 0x00, 0x00, 0xFF );

@@ -9,7 +9,7 @@ private:
     Game *m_world;
 public:
     Builder(Game *world);
-    Entity *createPlayer(double x, double y);
-    Entity *createWall(double x, double y);
+    Entity *createPlayer(double x, double y, double width, double height);
+    Entity *createWall(double x, double y, double  width, double height);
 };
 

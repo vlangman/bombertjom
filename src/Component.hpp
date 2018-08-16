@@ -6,48 +6,53 @@ class Entity;
 class Component 
 {
 protected:
-    Entity *m_owner;
+	Entity *m_owner;
 public:
-    Component(Entity *owner);
-    Entity *getOwner();
+	Component(Entity *owner);
+	Entity *getOwner();
 
-    virtual void update() = 0;
+	virtual void update() = 0;
 };
 
 class GraphicsComponent : public Component
 {
 private: 
-    double  *m_x;
-    double  *m_y;
-    int     *m_width;
-    int     *m_height;
-    E_COLOR mColor;
+	double  *m_x;
+	double  *m_y;
+	double   mwidth;
+	double   mheight;
+	E_COLOR mColor;
 public:
-    GraphicsComponent(Entity *owner, E_COLOR color);
+	GraphicsComponent(Entity *owner, E_COLOR color, double width, double height);
 
-    E_COLOR getColor();
-    void update();
+	E_COLOR getColor();
+	void update();
+	double getHeight(void) const;
+	double getWidth(void) const;
+
 };
 
 class MovementComponent : public Component 
 {
 public: 
-    MovementComponent(Entity *owner);
-    void move(double x, double y);
+	MovementComponent(Entity *owner);
+	void move(double x, double y);
+	void update();
 };
 
 class PlayerInputComponent : public Component 
 {
 public:
-    PlayerInputComponent(Entity *owner);
-    void update();
-    void handleInput(E_EVENT event);
+	PlayerInputComponent(Entity *owner);
+	void update();
+	void handleInput(E_EVENT event);
+	void movePlayer(double x, double y);
 };
 
 class CollisionComponent : public Component 
 {
 private: 
 public: 
-    CollisionComponent(Entity *owner);
-    void update();
+	CollisionComponent(Entity *owner);
+	void update();
 };

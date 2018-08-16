@@ -6,54 +6,63 @@ class RenderDescription;
 class Component;
 class GraphicsComponent;
 class PlayerInputComponent;
+class MovementComponent;
 
 enum E_ENTITY_TYPE 
 {
-    ET_PLAYER,
-    ET_WALL,
-    ET_NONE
+	ET_PLAYER,
+	ET_WALL,
+	ET_NONE
 };
 
 class Entity
 {
 protected:
-    double mX;
-    double mY;
-    E_ENTITY_TYPE mType;
-    Game *m_world;
+	double mX;
+	double mY;
+	double mWidth;
+	double mHeight;
+	E_ENTITY_TYPE mType;
+	Game *m_world;
 
 public:
-    Entity(Game *world);
-    virtual void update() = 0;
-    
-    double getX();
-    double getY();
+	Entity(Game *world);
+	virtual void update() = 0;
+	
+	double getX();
+	double getY();
 
-    void setX(double x);
-    void setY(double y);
-    void setPosition(double x, double y);
+	void setX(double x);
+	void setY(double y);
+	void setPosition(double x, double y);
 
-    Game *getWorld();
+	void setWidth(float _width);
+	void setHeight(float _height);
+	float getWidth(void) const;
+	float getHeight(void) const;
 
-    E_ENTITY_TYPE getEntityType();
+	Game *getWorld();
+
+	E_ENTITY_TYPE getEntityType();
 };
 
 class Player : public Entity 
 {
 private:
 public: 
-    Player(Game *world);
+	Player(Game *world);
 
-    GraphicsComponent *graphics;
-    PlayerInputComponent *inputHandler;
-    void update();
+	GraphicsComponent *graphics;
+	PlayerInputComponent *inputHandler;
+	MovementComponent *moveComponent;
+	void update();
 };
 
 class Wall : public Entity 
 {
 private: 
 public:
-    Wall(Game *world);
-    GraphicsComponent *graphics;
-    void update();
+	Wall(Game *world);
+	GraphicsComponent *graphics;
+	void update();
 };

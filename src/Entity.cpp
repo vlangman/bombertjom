@@ -63,3 +63,15 @@ double Entity::getY()
 {
     return mY;
 }
+
+void Entity::setWidth(float _width){
+    mWidth = _width;
+}
+
+void Entity::setHeight(float _height){
+    mHeight = _height;
+}
+
+Game *Entity::getWorld(){
+    return m_world;
+}

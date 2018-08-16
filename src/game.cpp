@@ -49,17 +49,22 @@ int Game::getVerbose(void) const{
 
 int 	Game::runLoop(void)
 {
-	Builder builder(this);
-	static int FrameCount;
+
+
+	Builder 	builder(this);
+	static int 	FrameCount;
+	int 		blocks_x = (this->window_x /32);
+	int 		blocks_y = (this->window_y /32);
+	double		increment_y = static_cast<double>(blocks_y) / 10;
+	double		increment_x =  static_cast<double>(blocks_x) / 10;
 
 	// Add the player
-	Entity *player = builder.createPlayer(32,32);
+	Entity *player = builder.createPlayer(32 * increment_x, 32 * increment_y, 32 * increment_x, 32 * increment_y);
 	addEntity(player);
 
-	int increment = this->window_x/10;
-	std::cout << increment << std::endl;
-
 	std::vector<std::vector<int>> map = this->gameWorld.getMap();
+
+
 
 	// read map from gameworld into game entities
 	 for (int x = 0; x < map.size(); x++) {
@@ -67,7 +72,7 @@ int 	Game::runLoop(void)
 		{
 			if (map[x][y] == 49)
 			{
-				Entity *wall = builder.createWall(x*increment,y*increment);
+				Entity *wall = builder.createWall(x*32*increment_x,y*32*increment_y,32*increment_x,32* increment_y);
 				addEntity(wall);
 			}
 		}
@@ -75,7 +80,7 @@ int 	Game::runLoop(void)
 
 	while (m_shouldRun)
 	{
-		mTimer->Update();
+		m_Timer->Update();
 		E_EVENT event = sdl.handleEvents();
 
 		if (event == E_EVENT::EVENT_CLOSE_WINDOW){
@@ -91,14 +96,14 @@ int 	Game::runLoop(void)
 
 		for (auto i : renderList)
 		{
-			sdl.draw(i->getOwner()->getX(),i->getOwner()->getY(),32,32,i->getColor());
+			sdl.draw(i->getOwner()->getX(),i->getOwner()->getY(),i->getWidth(),i->getHeight(),i->getColor());
 		}
 		// sdl.displayScreen();
-		if (mTimer->DeltaTime() >= (1.0f/ frameRate)){
+		if (m_Timer->DeltaTime() >= (1.0f/ frameRate)){
 			FrameCount++;
 			sdl.displayScreen();
-			float FPS = 1.0f / mTimer->DeltaTime();
-			mTimer->Reset();
+			float FPS = 1.0f / m_Timer->DeltaTime();
+			m_Timer->Reset();
 			
 			//write the fps to stdout
 			sdl.drawFps(FPS); 
@@ -119,13 +124,13 @@ void 	Game::init(int _verbose, int width, int height, bool fullscreen){
 	// exit(1);
 
 	//use instance to create and reset timer
-	mTimer = Timer::Instance();
+	m_Timer = Timer::Instance();
 	return;
 }
 
 void	Game::closeGame(void){
 	Timer::Release();
-	mTimer = NULL;
+	m_Timer = NULL;
 	exit(1);
 }
 
@@ -165,4 +170,9 @@ void Game::handleEvents()
 		return;
 	}
 	
+}
+
+
+float Game::getDeltaTime(void){
+	return m_Timer->DeltaTime();
 }
