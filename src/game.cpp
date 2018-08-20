@@ -52,7 +52,6 @@ int 	Game::runLoop(void)
 
 
 	Builder 	builder(this);
-	static int 	FrameCount;
 	int 		blocks_x = (this->window_x /32);
 	int 		blocks_y = (this->window_y /32);
 	double		increment_y = static_cast<double>(blocks_y) / 10;
@@ -77,10 +76,10 @@ int 	Game::runLoop(void)
 			}
 		}
 	}
-
+	m_Timer->Reset();
 	while (m_shouldRun)
 	{
-		m_Timer->Update();
+		//calulate and draw
 		E_EVENT event = sdl.handleEvents();
 
 		if (event == E_EVENT::EVENT_CLOSE_WINDOW){
@@ -98,16 +97,26 @@ int 	Game::runLoop(void)
 		{
 			sdl.draw(i->getOwner()->getX(),i->getOwner()->getY(),i->getWidth(),i->getHeight(),i->getColor());
 		}
+
 		// sdl.displayScreen();
-		if (m_Timer->DeltaTime() >= (1.0f/ frameRate)){
-			FrameCount++;
+		//update the timer to see how long calulations took
+
+		m_Timer->Update();
+		if (m_Timer->DeltaTime() < (1.0f/ frameRate)){
 			sdl.displayScreen();
+			float sleepTime = (1000.0f/frameRate - m_Timer->DeltaTime()) * 1000;
+			usleep(sleepTime);
+			m_Timer->Update();
 			float FPS = 1.0f / m_Timer->DeltaTime();
-			m_Timer->Reset();
 			
 			//write the fps to stdout
-			sdl.drawFps(FPS); 
+			sdl.drawFps(FPS);
 		}
+		else{
+			std::cout << "MISSED FRAME: " << getDeltaTime() << std::endl;
+		}
+		
+		m_Timer->Reset();
 	}
 	return 1;
 }
@@ -174,5 +183,6 @@ void Game::handleEvents()
 
 
 float Game::getDeltaTime(void){
+	m_Timer->Update();
 	return m_Timer->DeltaTime();
 }

@@ -16,7 +16,6 @@ void Timer::Release(void){
 
 Timer::Timer(void){
 	Reset();
-	mTimeScale = 1.0f;
 	return;
 }
 
@@ -26,7 +25,6 @@ Timer::~Timer(void){
 
 void Timer::Reset(void) {
 	mStartTicks = SDL_GetTicks();
-	mElapsedTicks = 0;
 	mDeltaTime = 0.0f;
 }
 
@@ -34,16 +32,7 @@ float Timer::DeltaTime(void){
 	return mDeltaTime;
 }
 
-void Timer::TimeScale(float t){
-	mTimeScale = t;
-}
-
-float Timer::getTimeScale(void){
-	return mTimeScale;
-}
-
 void Timer::Update(void){
-	mElapsedTicks = SDL_GetTicks() - mStartTicks;
-	//ticks in miliseconds
-	mDeltaTime = mElapsedTicks * 0.001f;
+	//ticks in miliseconds (/1000 for microsecs)
+	mDeltaTime = (SDL_GetTicks() - mStartTicks) * 0.001f;
 }

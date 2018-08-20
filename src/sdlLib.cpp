@@ -164,5 +164,5 @@ void 	SdlLib::drawFps(float fps){
 	std::cout << "FPS: ";
 	std::cout << fps << std::endl;
 	//clear terminal
-	std::cout << "\x1B[2J\x1B[H";
+	// std::cout << "\x1B[2J\x1B[H";
 }

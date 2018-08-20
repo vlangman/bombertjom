@@ -4,6 +4,7 @@
 #include "timer.hpp"
 #include "gameWorld.hpp"
 #include <vector>
+#include <unistd.h>
 
 
 class PlayerInputComponent;
@@ -20,7 +21,7 @@ class Game
 		bool 	verbose;
 		SdlLib	sdl;
 		Timer*	m_Timer;
-		const int frameRate = 200;
+		const float frameRate = 60;
 		GameWorld gameWorld;
 
 	public:

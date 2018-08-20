@@ -8,9 +8,7 @@ class Timer
 private:
 	static Timer *	sInstance;
 	unsigned int 	mStartTicks;
-	unsigned int 	mElapsedTicks;
 	float			mDeltaTime;
-	float			mTimeScale;
 
 public:
 	Timer();
@@ -21,10 +19,6 @@ public:
 
 	void	Reset(void);
 	float	DeltaTime(void);
-
-	void	TimeScale(float t);
-	float	getTimeScale(void);
-
 	void	Update(void);
 
 	
