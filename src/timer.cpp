@@ -35,4 +35,6 @@ float Timer::DeltaTime(void){
 void Timer::Update(void){
 	//ticks in miliseconds (/1000 for microsecs)
 	mDeltaTime = (SDL_GetTicks() - mStartTicks) * 0.001f;
+	if (mDeltaTime < 0.001f)
+		mDeltaTime = 0.001f;
 }

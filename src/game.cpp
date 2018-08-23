@@ -45,11 +45,7 @@ int Game::getVerbose(void) const{
 }
 
 
-//game loop functions
-
-int 	Game::runLoop(void)
-{
-
+void	Game::buildGameObjects(void){
 
 	Builder 	builder(this);
 	int 		blocks_x = (this->window_x /32);
@@ -57,14 +53,7 @@ int 	Game::runLoop(void)
 	double		increment_y = static_cast<double>(blocks_y) / 10;
 	double		increment_x =  static_cast<double>(blocks_x) / 10;
 
-	// Add the player
-	Entity *player = builder.createPlayer(32 * increment_x, 32 * increment_y, 32 * increment_x, 32 * increment_y);
-	addEntity(player);
-
 	std::vector<std::vector<int>> map = this->gameWorld.getMap();
-
-
-
 	// read map from gameworld into game entities
 	 for (int x = 0; x < map.size(); x++) {
 		for (int y = 0; y < map[x].size(); y++)
@@ -76,50 +65,80 @@ int 	Game::runLoop(void)
 			}
 		}
 	}
+
+	// Add the player
+	Entity *player = builder.createPlayer(32 * increment_x, 32 * increment_y, 32 * increment_x, 32 * increment_y);
+	addEntity(player);
+
+}
+
+//game loop functions
+
+void	Game::stepGame(void){
+	//calulate and draw
+	E_EVENT event = sdl.handleEvents();
+
+	if (event == E_EVENT::EVENT_CLOSE_WINDOW){
+		m_shouldRun = false;
+	}
+
+	for (auto i: inputHandlers)
+	{
+		i->handleInput(event);
+	}
+
+	sdl.clearScreen();
+
+	for (auto i : renderList)
+	{
+		sdl.draw(i->getOwner()->getX(),i->getOwner()->getY(),i->getWidth(),i->getHeight(),i->getColor());
+	}
+}
+
+
+int 	Game::runLoop(void)
+{
+
+	buildGameObjects();
 	m_Timer->Reset();
+	float timeStep = 0.0f;
+	float frameCounter = 0.0f;
+	float Delta = 0.0f;
+
 	while (m_shouldRun)
 	{
-		//calulate and draw
-		E_EVENT event = sdl.handleEvents();
-
-		if (event == E_EVENT::EVENT_CLOSE_WINDOW){
-			m_shouldRun = false;
-		}
-
-		for (auto i: inputHandlers)
-		{
-			i->handleInput(event);
-		}
-
-		sdl.clearScreen();
-
-		for (auto i : renderList)
-		{
-			sdl.draw(i->getOwner()->getX(),i->getOwner()->getY(),i->getWidth(),i->getHeight(),i->getColor());
-		}
-
-		// sdl.displayScreen();
-		//update the timer to see how long calulations took
+		stepGame();
 
 		m_Timer->Update();
-		if (m_Timer->DeltaTime() < (1.0f/ frameRate)){
-			sdl.displayScreen();
-			float sleepTime = (1000.0f/frameRate - m_Timer->DeltaTime()) * 1000;
-			usleep(sleepTime);
+		Delta = m_Timer->DeltaTime();
+		timeStep += Delta;
+		
+		while(timeStep < (1/frameRate)){
+			//update timer
 			m_Timer->Update();
-			float FPS = 1.0f / m_Timer->DeltaTime();
-			
-			//write the fps to stdout
-			sdl.drawFps(FPS);
-		}
-		else{
-			std::cout << "MISSED FRAME: " << getDeltaTime() << std::endl;
+			Delta = m_Timer->DeltaTime();
+			//increment the time for last frame
+			timeStep += Delta;
+			//step the game with the current delta time
+			stepGame();
+			//increment the stepCounter
+			frameCounter++;
 		}
 		
+		sdl.displayScreen();
+
+		float FPS = 1.0f/m_Timer->DeltaTime();
+		sdl.drawFps(FPS);
+		timeStep = 0;
+		frameCounter = 0;
 		m_Timer->Reset();
 	}
 	return 1;
+
+
+
 }
+
 
 void 	Game::init(int _verbose, int width, int height, bool fullscreen){
 	this->verbose = _verbose;

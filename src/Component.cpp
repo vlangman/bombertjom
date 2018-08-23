@@ -64,7 +64,7 @@ void PlayerInputComponent::handleInput(E_EVENT event)
 	if (offset < 1.0f/60){
 		offset = 1.0f/60 * 500;
 	}
-	std::cout << "OFFSET: " << offset << std::endl;
+	// std::cout << "OFFSET: " << offset << std::endl;
 
 	auto player = dynamic_cast<Player*>(m_owner);
 	
