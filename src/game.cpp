@@ -69,12 +69,12 @@ void	Game::buildGameObjects(void){
 	// Add the player
 	Entity *player = builder.createPlayer(32 * increment_x, 32 * increment_y, 32 * increment_x, 32 * increment_y);
 	addEntity(player);
-
+	this->m_Player = player;
 }
 
 //game loop functions
 
-void	Game::stepGame(void){
+void	Game::stepGame(float DeltaTime){
 	//calulate and draw
 	E_EVENT event = sdl.handleEvents();
 
@@ -86,6 +86,10 @@ void	Game::stepGame(void){
 	{
 		i->handleInput(event);
 	}
+
+	//this is some yikes code xD
+	auto player = dynamic_cast<Player*>(this->m_Player);
+	player->movePlayer(DeltaTime);
 
 	sdl.clearScreen();
 
@@ -107,7 +111,6 @@ int 	Game::runLoop(void)
 
 	while (m_shouldRun)
 	{
-		stepGame();
 
 		m_Timer->Update();
 		Delta = m_Timer->DeltaTime();
@@ -120,7 +123,7 @@ int 	Game::runLoop(void)
 			//increment the time for last frame
 			timeStep += Delta;
 			//step the game with the current delta time
-			stepGame();
+			stepGame(Delta);
 			//increment the stepCounter
 			frameCounter++;
 		}

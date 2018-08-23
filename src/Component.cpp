@@ -58,28 +58,23 @@ void PlayerInputComponent::handleInput(E_EVENT event)
 	if (m_owner->getEntityType() != E_ENTITY_TYPE::ET_PLAYER){
 		std::cout << "ERROR: PlayerInput components' owner is not of type PLAYER";
 	}
-	Game *game = m_owner->getWorld();
-	float offset = game->getDeltaTime();
-	
-	if (offset < 1.0f/60){
-		offset = 1.0f/60 * 500;
-	}
-	// std::cout << "OFFSET: " << offset << std::endl;
 
 	auto player = dynamic_cast<Player*>(m_owner);
 	
-
 	if (event == E_EVENT::EVENT_KEYBOARD_RIGHT){
-		movePlayer(m_owner->getX() + offset , m_owner->getY());
+		player->setDirection(0,1);
 	}
-	else if (event == E_EVENT::EVENT_KEYBOARD_LEFT){
-		movePlayer(m_owner->getX() - offset , m_owner->getY());
+	if (event == E_EVENT::EVENT_KEYBOARD_LEFT){
+		player->setDirection(0,-1);
 	}
-	else if (event == E_EVENT::EVENT_KEYBAORD_DOWN){
-		movePlayer(m_owner->getX(), m_owner->getY() + offset);
+	if (event == E_EVENT::EVENT_KEYBAORD_DOWN){
+		player->setDirection(-1,0);
 	}
-	else if (event == E_EVENT::EVENT_KEYBOARD_UP){
-		movePlayer(m_owner->getX(), m_owner->getY() - offset);
+	if (event == E_EVENT::EVENT_KEYBOARD_UP){
+		player->setDirection(1,0);
+	}
+	if (event == E_EVENT::EVENT_NONE){
+		player->setDirection(0,0);
 	}
 }
 

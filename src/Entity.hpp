@@ -49,13 +49,19 @@ public:
 class Player : public Entity 
 {
 private:
+	bool	north;
+	bool	south;
+	bool	west;
+	bool	east;
 public: 
 	Player(Game *world);
 
 	GraphicsComponent *graphics;
 	PlayerInputComponent *inputHandler;
 	MovementComponent *moveComponent;
-	void update();
+	void	update();
+	void	setDirection(int vertical, int horizontal);
+	void	movePlayer(float DeltaTime);
 };
 
 class Wall : public Entity 

@@ -85,8 +85,10 @@ E_EVENT SdlLib::handleEvents()
 				case SDLK_1: return E_EVENT::EVENT_KEYBOARD_1;
 				case SDLK_2: return E_EVENT::EVENT_KEYBOARD_2;
 				case SDLK_3: return E_EVENT::EVENT_KEYBOARD_3;
-				default: return E_EVENT::EVENT_NONE;
 			}
+		}
+		else if (event.type == SDL_KEYUP){
+			return E_EVENT::EVENT_NONE;
 		}
 	}
 	return E_EVENT::EVENT_NONE;

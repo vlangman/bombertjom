@@ -23,6 +23,7 @@ class Game
 		Timer*	m_Timer;
 		const float frameRate = 60;
 		GameWorld gameWorld;
+		Entity *m_Player;
 
 	public:
 		std::vector<Entity*> entityList;
@@ -45,7 +46,7 @@ class Game
 		void 	init(int _verbose = 0, int width = 600, int height = 600, bool fullscreen = 0);
 		void 	handleEvents(void);
 		void	closeGame(void);
-		void	stepGame(void);
+		void	stepGame(float DeltaTime);
 		
 		
 		// void	cleanup();
