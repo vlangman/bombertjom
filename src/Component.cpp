@@ -43,12 +43,6 @@ PlayerInputComponent::PlayerInputComponent(Entity *owner)
 
 }
 
-void PlayerInputComponent::movePlayer(double x, double y)
-{
-	auto player = dynamic_cast<Player*>(m_owner);
-	player->moveComponent->move(x, y);
-}
-
 void PlayerInputComponent::update()
 {
 }
@@ -98,6 +92,72 @@ Entity *Component::getOwner()
 	return m_owner;
 }
 
-void  MovementComponent::update()
-{
+void  MovementComponent::update(){
 }
+
+// ================ COLLISION COMPONENT ============================== //
+
+void CollisionComponent::update(){
+
+}
+
+CollisionComponent::CollisionComponent(Entity *owner)
+: Component(owner)
+{
+
+}
+
+double  CollisionComponent::getX(){
+	return m_owner->getX();
+}
+
+double  CollisionComponent::getY(){
+	return m_owner->getY();
+}
+
+bool	withinSquare(double p_x, double p_y, double w_x, double w_y, double scale){
+	if (p_x > w_x && p_x < w_x + scale){
+		//possible x collision since horizontal match
+		if (p_y > w_y && p_y < w_y + scale){
+			//check vertical match
+			//x is within and y is within collide
+			return true;
+		}
+	}
+	if (p_x + scale > w_x && p_x + scale < w_x + scale){
+		if (p_y + scale > w_y && p_y + scale < w_y + scale){
+			return true;
+		}
+	}
+
+	if (p_y > w_y && p_y < w_y + scale){
+		if(p_x > w_x && p_x < w_x + scale){
+			return true;
+		}
+	}
+
+	if (p_y + scale > w_y && p_y + scale < w_y + scale){
+		if(p_x + scale > w_x && p_x + scale < w_x + scale){
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+bool CollisionComponent::checkCollision(double x, double y){
+	
+	Game * m_game = m_owner->getWorld();
+	double xInc = m_game->getWindowX() / 10.0f;
+	double yInc = m_game->getWindowY() / 10.0f;
+
+	for (auto i: m_game->colliderList)
+	{
+		if (withinSquare(x, y, i->getX(), i->getY(), yInc)){
+			std::cout << "within square" << std::endl;
+		}
+	}
+
+}
+

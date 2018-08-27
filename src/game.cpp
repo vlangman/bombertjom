@@ -48,10 +48,8 @@ int Game::getVerbose(void) const{
 void	Game::buildGameObjects(void){
 
 	Builder 	builder(this);
-	int 		blocks_x = (this->window_x /32);
-	int 		blocks_y = (this->window_y /32);
-	double		increment_y = static_cast<double>(blocks_y) / 10;
-	double		increment_x =  static_cast<double>(blocks_x) / 10;
+	double		increment_y = static_cast<double>(this->window_y) / 10;
+	double		increment_x =  static_cast<double>(this->window_x) / 10;
 
 	std::vector<std::vector<int>> map = this->gameWorld.getMap();
 	// read map from gameworld into game entities
@@ -60,14 +58,14 @@ void	Game::buildGameObjects(void){
 		{
 			if (map[x][y] == 49)
 			{
-				Entity *wall = builder.createWall(x*32*increment_x,y*32*increment_y,32*increment_x,32* increment_y);
+				Entity *wall = builder.createWall(x*increment_x,y*increment_y,increment_x, increment_y);
 				addEntity(wall);
 			}
 		}
 	}
 
 	// Add the player
-	Entity *player = builder.createPlayer(32 * increment_x, 32 * increment_y, 32 * increment_x, 32 * increment_y);
+	Entity *player = builder.createPlayer( increment_x,  increment_y,  increment_x,  increment_y);
 	addEntity(player);
 	this->m_Player = player;
 }
@@ -131,7 +129,7 @@ int 	Game::runLoop(void)
 		sdl.displayScreen();
 
 		float FPS = 1.0f/m_Timer->DeltaTime();
-		sdl.drawFps(FPS);
+		// sdl.drawFps(FPS);
 		timeStep = 0;
 		frameCounter = 0;
 		m_Timer->Reset();
@@ -175,6 +173,7 @@ void	Game::addEntity(Entity *entity)
 	}
 	else if (entity->getEntityType() == E_ENTITY_TYPE::ET_WALL){
 		renderList.push_back(dynamic_cast<Wall*>(entity)->graphics);
+		colliderList.push_back(dynamic_cast<Wall*>(entity)->collision);
 	}
 }
 

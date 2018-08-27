@@ -5,6 +5,7 @@ class Game;
 class RenderDescription;
 class Component;
 class GraphicsComponent;
+class CollisionComponent;
 class PlayerInputComponent;
 class MovementComponent;
 
@@ -59,6 +60,8 @@ public:
 	GraphicsComponent *graphics;
 	PlayerInputComponent *inputHandler;
 	MovementComponent *moveComponent;
+	CollisionComponent *collision;
+
 	void	update();
 	void	setDirection(int vertical, int horizontal);
 	void	movePlayer(float DeltaTime);
@@ -70,5 +73,6 @@ private:
 public:
 	Wall(Game *world);
 	GraphicsComponent *graphics;
+	CollisionComponent *collision;
 	void update();
 };

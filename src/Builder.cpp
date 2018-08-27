@@ -16,6 +16,9 @@ Entity *Builder::createPlayer(double x, double y, double width, double height)
 	// init input handler
 	player->inputHandler = new PlayerInputComponent(player);
 
+	std::cout << "COLLIDER INIT" << std::endl;
+	player->collision = new CollisionComponent(player);
+
 	player->moveComponent = new MovementComponent(player);
 
 	player->moveComponent->move(x, y);
@@ -31,6 +34,7 @@ Entity *Builder::createWall(double x, double y, double width, double height)
 	wall->setHeight(height);
 	// init graphics component
 	wall->graphics = new GraphicsComponent(wall, E_COLOR::COLOR_GREY, width, height);
+	wall->collision = new CollisionComponent(wall);
 	wall->setPosition(x,y);
 	return wall;
 }

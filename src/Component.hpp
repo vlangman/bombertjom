@@ -46,13 +46,17 @@ public:
 	PlayerInputComponent(Entity *owner);
 	void update();
 	void handleInput(E_EVENT event);
-	void movePlayer(double x, double y);
+	// void movePlayer(double x, double y);
 };
 
 class CollisionComponent : public Component 
 {
-private: 
-public: 
+private:
+	
+public:
 	CollisionComponent(Entity *owner);
-	void update();
+	void	update();
+	bool	checkCollision(double x, double y);
+	double	getX(void);
+	double	getY(void);
 };

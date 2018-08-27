@@ -9,6 +9,7 @@
 
 class PlayerInputComponent;
 class GraphicsComponent;
+class CollisionComponent;
 class Entity;
 
 class Game
@@ -28,7 +29,8 @@ class Game
 	public:
 		std::vector<Entity*> entityList;
 		std::vector<PlayerInputComponent*> inputHandlers;
-		std::vector<GraphicsComponent*> renderList;		
+		std::vector<GraphicsComponent*> renderList;
+		std::vector<CollisionComponent*> colliderList;
 
 		//canonical constructors
 		Game(void);

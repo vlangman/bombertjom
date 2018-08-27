@@ -35,21 +35,26 @@ void    Player::setDirection(int vertical, int horizontal){
 void	Player::movePlayer(float DeltaTime){
 	// std::cout << "MOVING WITH DELTA: " << DeltaTime << std::endl;
 
+
 	float scale = 5000 * DeltaTime;
 	if (east){
 		// std::cout << "RIGHT" << std::endl;
+		collision->checkCollision(getX() + scale, getY());
 		setX(getX() + scale);
 	}
 	if (west){
 		// std::cout << "LEFT" << std::endl;
+		collision->checkCollision(getX() - scale, getY());
 		setX(getX() - scale);
 	}
 	if (south){
 		// std::cout << "DOWN" << std::endl;
+		collision->checkCollision(getX(), getY() + scale);
 		setY(getY() + scale);
 	}
 	if (north){
 		// std::cout << "UP" << std::endl;
+		collision->checkCollision(getX(), getY() - scale);
 		setY(getY() - scale);
 	}
 	return;
