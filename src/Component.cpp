@@ -116,28 +116,42 @@ double  CollisionComponent::getY(){
 }
 
 bool	withinSquare(double p_x, double p_y, double w_x, double w_y, double scale){
-	if (p_x > w_x && p_x < w_x + scale){
-		//possible x collision since horizontal match
+
+	if (p_x == w_x && p_y < w_y + scale && w_y < p_y){
+		// std::cout << "top side collision" << std::endl;
+		return true;
+	} else if (p_x == w_x && p_y + scale > w_y && w_y > p_y){
+		// std::cout << "bottom side collision" << std::endl;
+		return true;
+	}
+
+	if (p_y == w_y && p_x < w_x + scale && w_x < p_x){
+		// std::cout << "left side collision" << std::endl;
+		return true;
+	} else if (p_y == w_y && p_x + scale > w_x && w_x > p_x){
+		// std::cout << "right side collision" << std::endl;
+		return true;
+	}
+
+	// if left side of player overlaps right side of wall && right side doesnt overlap left side of wall
+	if (p_x < w_x + scale && p_x > w_x){
+		// std::cout << "if left side of player overlaps right side of wall" << std::endl;
 		if (p_y > w_y && p_y < w_y + scale){
-			//check vertical match
-			//x is within and y is within collide
+			// std::cout << "top left corner collision" << std::endl;
+			return true;
+		}else if (p_y < w_y && p_y + scale > w_y){
+			// std::cout << "bottom left corner collision" << std::endl;
 			return true;
 		}
 	}
-	if (p_x + scale > w_x && p_x + scale < w_x + scale){
-		if (p_y + scale > w_y && p_y + scale < w_y + scale){
+	// if right side of player overlaps left side of wall
+	if (p_x + scale > w_x && p_x < w_x){
+		// std::cout << "if right side of player overlaps left side of wall" << std::endl;
+		if (p_y > w_y && p_y < w_y + scale){
+			// std::cout << "top right corner collision" << std::endl;
 			return true;
-		}
-	}
-
-	if (p_y > w_y && p_y < w_y + scale){
-		if(p_x > w_x && p_x < w_x + scale){
-			return true;
-		}
-	}
-
-	if (p_y + scale > w_y && p_y + scale < w_y + scale){
-		if(p_x + scale > w_x && p_x + scale < w_x + scale){
+		}else if (p_y < w_y && p_y + scale > w_y){
+			// std::cout << "bottom right corner collision" << std::endl;
 			return true;
 		}
 	}
@@ -155,9 +169,10 @@ bool CollisionComponent::checkCollision(double x, double y){
 	for (auto i: m_game->colliderList)
 	{
 		if (withinSquare(x, y, i->getX(), i->getY(), yInc)){
-			std::cout << "within square" << std::endl;
+			std::cout << "Collision detected" << std::endl;
+			return false;
 		}
 	}
-
+	return true;
 }
 

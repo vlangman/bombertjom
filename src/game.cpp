@@ -149,7 +149,7 @@ void 	Game::init(int _verbose, int width, int height, bool fullscreen){
 	this->sdl.init(width, height, this->verbose);
 	this->m_shouldRun = true;
 	//instantiates the game world
-	this->gameWorld.init("test2.map");
+	this->gameWorld.init("dank.map");
 	// exit(1);
 
 	//use instance to create and reset timer
