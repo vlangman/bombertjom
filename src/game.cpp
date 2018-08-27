@@ -87,6 +87,15 @@ void	Game::stepGame(void){
 		i->handleInput(event);
 	}
 
+	//>maxine
+
+
+	for (auto c: collideList) {
+		c->checkCollision(entityList);
+	}
+
+	//<
+
 	sdl.clearScreen();
 
 	for (auto i : renderList)
@@ -167,6 +176,9 @@ void	Game::addEntity(Entity *entity)
 	entityList.push_back(entity);
 
 	if (entity->getEntityType() == E_ENTITY_TYPE::ET_PLAYER){
+		//>maxine
+		collideList.push_back(dynamic_cast<Player*>(entity)->collider);
+		//<
 		renderList.push_back(dynamic_cast<Player*>(entity)->graphics);
 		inputHandlers.push_back(dynamic_cast<Player*>(entity)->inputHandler);
 	}

@@ -52,6 +52,7 @@ private:
 public: 
 	Player(Game *world);
 
+	CollisionComponent *collider;
 	GraphicsComponent *graphics;
 	PlayerInputComponent *inputHandler;
 	MovementComponent *moveComponent;

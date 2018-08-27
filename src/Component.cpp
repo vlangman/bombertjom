@@ -106,3 +106,26 @@ Entity *Component::getOwner()
 void  MovementComponent::update()
 {
 }
+
+// ================ COLLISION COMPONENT ============================== //
+
+CollisionComponent::CollisionComponent(Entity *owner)
+: Component(owner)
+{
+
+}
+
+bool CollisionComponent::checkCollision(std::vector<Entity*> entityList)
+{
+	for (auto &element : entityList) {
+		if (owner->getX() == element.getX() && owner->getY() == element.getY() && element.getEntityType() == ET_WALL){
+			std::cout << "collision" << std::endl;
+			return true;
+		}
+	}
+	return false;
+}
+
+void  CollisionComponent::update()
+{
+}

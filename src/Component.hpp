@@ -51,8 +51,8 @@ public:
 
 class CollisionComponent : public Component 
 {
-private: 
-public: 
+public:
 	CollisionComponent(Entity *owner);
+	bool checkCollision(std::vector<Entity*> *entityList);
 	void update();
 };

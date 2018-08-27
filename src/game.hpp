@@ -27,7 +27,8 @@ class Game
 	public:
 		std::vector<Entity*> entityList;
 		std::vector<PlayerInputComponent*> inputHandlers;
-		std::vector<GraphicsComponent*> renderList;		
+		std::vector<GraphicsComponent*> renderList;
+		std::vector<CollisionComponent*> collideList;
 
 		//canonical constructors
 		Game(void);

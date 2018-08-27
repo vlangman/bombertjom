@@ -11,6 +11,8 @@ Entity *Builder::createPlayer(double x, double y, double width, double height)
 {
 	Player *player = new Player(m_world);
 
+	// init collision component
+	player->collider = new CollisionComponent(player);
 	// init graphics component
 	player->graphics = new GraphicsComponent(player, E_COLOR::COLOR_RED, width, height);
 	// init input handler
