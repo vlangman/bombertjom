@@ -38,3 +38,18 @@ Entity *Builder::createWall(double x, double y, double width, double height)
 	wall->setPosition(x,y);
 	return wall;
 }
+
+Entity *Builder::createBomb(double x, double y, double width, double height){
+
+	Bomb *bomb = new Bomb(m_world);
+
+	bomb->setWidth(width);
+	bomb->setHeight(height);
+
+	bomb->graphics = new GraphicsComponent(bomb, E_COLOR::COLOR_YELLOW, width, height);
+	bomb->setPosition(x,y);
+
+	m_world->addEntity(bomb);
+	return bomb;
+
+}

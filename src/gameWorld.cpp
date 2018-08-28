@@ -37,7 +37,8 @@ void GameWorld::init(const  std::string level){
 		}
 	}
 	else{
-		std::cout << "an error occured opening file" << std::endl;
+		std::cout << "an error occured opening map file" << std::endl;
+		exit(1);
 		return;
 	}
 	return;

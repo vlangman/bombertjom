@@ -48,14 +48,17 @@ int Game::getVerbose(void) const{
 void	Game::buildGameObjects(void){
 
 	Builder 	builder(this);
-	double		increment_y = static_cast<double>(this->window_y) / 10;
-	double		increment_x =  static_cast<double>(this->window_x) / 10;
-
 	std::vector<std::vector<int>> map = this->gameWorld.getMap();
+	double		increment_y = static_cast<double>(this->window_y) / map.size();
+	double		increment_x =  static_cast<double>(this->window_x) / map.size();
+	this->scale = increment_y;
+
+	
 	// read map from gameworld into game entities
-	 for (int x = 0; x < map.size(); x++) {
-		for (int y = 0; y < map[x].size(); y++)
+	 for (unsigned int x = 0; x < map.size(); x++) {
+		for (unsigned int y = 0; y < map[x].size(); y++)
 		{
+			//if the number read is a 1 (ascii 49)
 			if (map[x][y] == 49)
 			{
 				Entity *wall = builder.createWall(x*increment_x,y*increment_y,increment_x, increment_y);
@@ -128,15 +131,13 @@ int 	Game::runLoop(void)
 		
 		sdl.displayScreen();
 
-		float FPS = 1.0f/m_Timer->DeltaTime();
+		// float FPS = 1.0f/m_Timer->DeltaTime();
 		// sdl.drawFps(FPS);
 		timeStep = 0;
 		frameCounter = 0;
 		m_Timer->Reset();
 	}
 	return 1;
-
-
 
 }
 
@@ -175,6 +176,9 @@ void	Game::addEntity(Entity *entity)
 		renderList.push_back(dynamic_cast<Wall*>(entity)->graphics);
 		colliderList.push_back(dynamic_cast<Wall*>(entity)->collision);
 	}
+	else if (entity->getEntityType() == E_ENTITY_TYPE::ET_BOMB){
+		renderList.push_back(dynamic_cast<Bomb*>(entity)->graphics);
+	}
 }
 
 // void	cleanup();
@@ -206,4 +210,8 @@ void Game::handleEvents()
 float Game::getDeltaTime(void){
 	m_Timer->Update();
 	return m_Timer->DeltaTime();
+}
+
+double Game::getScale(void) const{
+	return  scale;
 }

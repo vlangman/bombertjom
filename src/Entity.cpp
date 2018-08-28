@@ -68,6 +68,17 @@ void	Player::movePlayer(float DeltaTime){
 	return;
 }
 
+
+void	Player::placeBomb(void){
+	std::cout << "PLACING A BOMB at x: " << getX()<< " y: " << getY() << " scale is: " << m_world->getScale() << std::endl;
+	Builder * builder = new Builder(m_world);
+	builder->createBomb(getX(), getY(), m_world->getScale(), m_world->getScale());
+	delete builder;
+
+	return;
+}
+
+
 // =============================== WALL =============================== //
 void Wall::update() 
 {
@@ -81,6 +92,11 @@ Wall::Wall(Game *world)
 }
 
 // ============================== ENTITY ================================ //
+Entity::Entity(void){
+	std::cout << "THIS SHOULD NEVER BE CALLED!! REEEEEEEĒEĒ" << std::endl;
+	return;
+}
+
 Entity::Entity(Game *world)
 {
 	m_world = world;
@@ -128,4 +144,38 @@ void Entity::setHeight(float _height){
 
 Game *Entity::getWorld(){
 	return m_world;
+}
+
+// ============================== BOMB ================================ //
+
+//canonical constructors
+Bomb::Bomb(void) : Entity(){
+	return;
+}
+
+Bomb::~Bomb(void){
+	return;
+}
+
+Bomb::Bomb(const Bomb & _bomb){
+	static_cast<void>(_bomb);
+	return;
+}
+
+Bomb & Bomb::operator=(const Bomb & _rhs){
+	static_cast<void>(_rhs);
+	return *this;
+}
+
+
+//usefull constructors
+Bomb::Bomb(Game *world) : Entity(world)
+{
+	mType = ET_BOMB;
+}
+
+//BOMB FUNCTIONS
+
+void	Bomb::update(void){
+	return;
 }

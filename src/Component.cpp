@@ -67,6 +67,9 @@ void PlayerInputComponent::handleInput(E_EVENT event)
 	if (event == E_EVENT::EVENT_KEYBOARD_UP){
 		player->setDirection(1,0);
 	}
+	if (event == E_EVENT::EVENT_KEYBOARD_SPACEBAR){
+		player->placeBomb();
+	}
 	if (event == E_EVENT::EVENT_NONE){
 		player->setDirection(0,0);
 	}
@@ -163,13 +166,11 @@ bool	withinSquare(double p_x, double p_y, double w_x, double w_y, double scale){
 bool CollisionComponent::checkCollision(double x, double y){
 	
 	Game * m_game = m_owner->getWorld();
-	double xInc = m_game->getWindowX() / 10.0f;
-	double yInc = m_game->getWindowY() / 10.0f;
+	double scale = m_game->getScale();
 
 	for (auto i: m_game->colliderList)
 	{
-		if (withinSquare(x, y, i->getX(), i->getY(), yInc)){
-			std::cout << "Collision detected" << std::endl;
+		if (withinSquare(x, y, i->getX(), i->getY(), scale)){
 			return false;
 		}
 	}

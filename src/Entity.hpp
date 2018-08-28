@@ -1,4 +1,5 @@
 #pragma once
+#include "Builder.hpp"
 #include <vector>
 
 class Game;
@@ -13,6 +14,7 @@ enum E_ENTITY_TYPE
 {
 	ET_PLAYER,
 	ET_WALL,
+	ET_BOMB,
 	ET_NONE
 };
 
@@ -27,6 +29,8 @@ protected:
 	Game *m_world;
 
 public:
+	Entity(void);
+
 	Entity(Game *world);
 	virtual void update() = 0;
 	
@@ -65,6 +69,7 @@ public:
 	void	update();
 	void	setDirection(int vertical, int horizontal);
 	void	movePlayer(float DeltaTime);
+	void	placeBomb(void);
 };
 
 class Wall : public Entity 
@@ -76,3 +81,30 @@ public:
 	CollisionComponent *collision;
 	void update();
 };
+
+
+class Bomb : public Entity 
+{
+public:
+
+	//COMPONENTS
+	GraphicsComponent *graphics;
+	CollisionComponent *collision;
+
+	//canonical constructors
+	Bomb(void);
+	~Bomb(void);
+	Bomb(const Bomb & _bomb);
+	Bomb & operator=(const Bomb & _rhs);
+
+	//usefull constructors
+	Bomb(Game *world);
+
+	//BOMB FUNCTIONS
+
+
+	void	update();
+};
+
+
+

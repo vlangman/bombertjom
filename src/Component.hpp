@@ -60,3 +60,4 @@ public:
 	double	getX(void);
 	double	getY(void);
 };
+

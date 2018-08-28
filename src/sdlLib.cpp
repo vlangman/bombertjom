@@ -85,6 +85,7 @@ E_EVENT SdlLib::handleEvents()
 				case SDLK_1: return E_EVENT::EVENT_KEYBOARD_1;
 				case SDLK_2: return E_EVENT::EVENT_KEYBOARD_2;
 				case SDLK_3: return E_EVENT::EVENT_KEYBOARD_3;
+				case SDLK_SPACE: return E_EVENT::EVENT_KEYBOARD_SPACEBAR;
 			}
 		}
 		else if (event.type == SDL_KEYUP){
