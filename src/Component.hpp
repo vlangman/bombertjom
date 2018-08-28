@@ -1,6 +1,7 @@
 #pragma once
 #include "game.hpp"
 
+
 class Entity;
 
 class Component 
@@ -61,3 +62,25 @@ public:
 	double	getY(void);
 };
 
+
+class TimerComponent : public Component 
+{
+private:
+	static TimerComponent *	sInstance;
+	unsigned int 			mStartTicks;
+	float					mDeltaTime;
+
+public:
+
+	TimerComponent(Entity *owner);
+	~TimerComponent(void);
+
+
+	static TimerComponent *	Instance(Entity *owner);
+	static void		Release(void);
+
+	void	Reset(void);
+	float	DeltaTime(void);
+	//update the game clock
+	void	update(void);
+};

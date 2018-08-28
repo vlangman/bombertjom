@@ -119,13 +119,13 @@ int 	Game::runLoop(void)
 	while (m_shouldRun)
 	{
 
-		m_Timer->Update();
+		m_Timer->update();
 		Delta = m_Timer->DeltaTime();
 		timeStep += Delta;
 
 		while(timeStep < (1/frameRate)){
 			//update timer
-			m_Timer->Update();
+			m_Timer->update();
 			Delta = m_Timer->DeltaTime();
 			//increment the time for last frame
 			timeStep += Delta;
@@ -157,15 +157,15 @@ void 	Game::init(int _verbose, int width, int height, bool fullscreen){
 	this->m_shouldRun = true;
 	//instantiates the game world
 	this->gameWorld.init("dank.map");
-	// exit(1);
 
 	//use instance to create and reset timer
-	m_Timer = Timer::Instance();
+	GameClock *gameClock = new GameClock(this);
+	m_Timer = TimerComponent::Instance(gameClock);
 	return;
 }
 
 void	Game::closeGame(void){
-	Timer::Release();
+	TimerComponent::Release();
 	m_Timer = NULL;
 	exit(1);
 }
@@ -215,7 +215,7 @@ void Game::handleEvents()
 
 
 float Game::getDeltaTime(void){
-	m_Timer->Update();
+	m_Timer->update();
 	return m_Timer->DeltaTime();
 }
 

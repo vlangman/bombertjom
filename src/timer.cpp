@@ -1,4 +1,4 @@
-#include "timer.hpp"
+/*#include "timer.hpp"
 
 Timer *Timer::sInstance = NULL;
 
@@ -37,4 +37,4 @@ void Timer::Update(void){
 	mDeltaTime = (SDL_GetTicks() - mStartTicks) * 0.001f;
 	if (mDeltaTime < 0.001f)
 		mDeltaTime = 0.001f;
-}
+}*/

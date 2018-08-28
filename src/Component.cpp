@@ -177,3 +177,46 @@ bool CollisionComponent::checkCollision(double x, double y){
 	return true;
 }
 
+
+// ================ TIMER COMPONENT ============================== //
+
+TimerComponent *TimerComponent::sInstance = NULL;
+
+TimerComponent *TimerComponent::Instance(Entity *owner){
+	if (sInstance == NULL){
+		sInstance = new TimerComponent(owner);
+	}
+	return sInstance;
+}
+
+void TimerComponent::Release(void){
+	delete sInstance;
+	sInstance = NULL;
+}
+
+TimerComponent::TimerComponent(Entity *owner)
+: Component(owner)
+{
+	Reset();
+	return;
+}
+
+TimerComponent::~TimerComponent(void){
+	return;
+}
+
+void TimerComponent::Reset(void) {
+	mStartTicks = SDL_GetTicks();
+	mDeltaTime = 0.0f;
+}
+
+float TimerComponent::DeltaTime(void){
+	return mDeltaTime;
+}
+
+void TimerComponent::update(void){
+	//ticks in miliseconds (/1000 for microsecs)
+	mDeltaTime = (SDL_GetTicks() - mStartTicks) * 0.001f;
+	if (mDeltaTime < 0.001f)
+		mDeltaTime = 0.001f;
+}

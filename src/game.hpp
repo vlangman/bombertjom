@@ -1,8 +1,8 @@
 #pragma once
 #include <iostream>
 #include "sdlLib.hpp"
-#include "timer.hpp"
 #include "gameWorld.hpp"
+// #include "Component.hpp"
 #include <vector>
 #include <unistd.h>
 
@@ -10,22 +10,23 @@
 class PlayerInputComponent;
 class GraphicsComponent;
 class CollisionComponent;
+class TimerComponent;
 class Entity;
 
 class Game
 {
 	private:
 
-		int			window_x;
-		int			window_y;
-		bool		m_shouldRun;
-		bool 		verbose;
-		SdlLib		sdl;
-		Timer*		m_Timer;
-		const float frameRate = 100;
-		GameWorld 	gameWorld;
-		Entity 		*m_Player;
-		double		scale;
+		int				window_x;
+		int				window_y;
+		bool			m_shouldRun;
+		bool 			verbose;
+		SdlLib			sdl;
+		TimerComponent*	m_Timer;
+		const float 	frameRate = 60;
+		GameWorld 		gameWorld;
+		Entity 			*m_Player;
+		double			scale;
 
 	public:
 		std::vector<Entity*> entityList;

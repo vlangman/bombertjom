@@ -1,5 +1,6 @@
 #pragma once
 #include "Builder.hpp"
+#include "timer.hpp"
 #include <vector>
 
 class Game;
@@ -90,6 +91,7 @@ public:
 	//COMPONENTS
 	GraphicsComponent *graphics;
 	CollisionComponent *collision;
+	// TimerComponent * timer;
 
 	//canonical constructors
 	Bomb(void);
@@ -106,5 +108,9 @@ public:
 	void	update();
 };
 
-
-
+class GameClock : public Entity{
+public:
+	GameClock(Game *world);
+	~GameClock(void);
+	void update(void);
+};

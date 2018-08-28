@@ -179,3 +179,18 @@ Bomb::Bomb(Game *world) : Entity(world)
 void	Bomb::update(void){
 	return;
 }
+
+// ============================== gameClock ================================ //
+
+
+GameClock::GameClock(Game *world) : Entity(world){
+	return;
+}
+
+GameClock::~GameClock(void){
+	return;
+}
+
+void GameClock::update(void){
+	return;
+}

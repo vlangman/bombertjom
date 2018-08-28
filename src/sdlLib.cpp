@@ -7,8 +7,6 @@ void SdlLib::draw(GraphicsComponent *graphics)
 }
 
 /*..
-
-
 	default constructors and deconstructors for canonical form
 */
 	 SdlLib::SdlLib(){
