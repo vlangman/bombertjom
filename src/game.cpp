@@ -88,6 +88,12 @@ void	Game::stepGame(float DeltaTime){
 		i->handleInput(event);
 	}
 
+	for (auto i: entityList){
+		if (i->getEntityType() == E_ENTITY_TYPE::ET_BOMB){
+
+		}
+	}
+
 	//this is some yikes code xD
 	auto player = dynamic_cast<Player*>(this->m_Player);
 	player->movePlayer(DeltaTime);
@@ -116,7 +122,7 @@ int 	Game::runLoop(void)
 		m_Timer->Update();
 		Delta = m_Timer->DeltaTime();
 		timeStep += Delta;
-		
+
 		while(timeStep < (1/frameRate)){
 			//update timer
 			m_Timer->Update();
@@ -128,7 +134,7 @@ int 	Game::runLoop(void)
 			//increment the stepCounter
 			frameCounter++;
 		}
-		
+
 		sdl.displayScreen();
 
 		// float FPS = 1.0f/m_Timer->DeltaTime();
@@ -186,7 +192,8 @@ void	Game::addEntity(Entity *entity)
 
 //utility
 
-void 	Game::log(std::string message){
+void 	Game::log(std::string message)
+{
 	if (this->verbose){
 		std::cout << message << std::endl;
 	}
