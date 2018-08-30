@@ -33,10 +33,30 @@ void    Player::setDirection(int vertical, int horizontal){
 }
 
 void	Player::movePlayer(float DeltaTime){
-	// std::cout << "MOVING WITH DELTA: " << DeltaTime << std::endl;
 
 
-	float scale = 5000 * DeltaTime;
+
+	// float scale = 0.0f;
+	// float targetDist = 1.0f/60.0f * 5000.0f;
+	float scale = DeltaTime * 5000.0f;
+
+	// float distance = targetDist - actualDist;
+	// // float distance = sqrt(dx*dx+dx*dx);
+	// std::cout << "DIST CHECK:  "<< distance << std::endl;
+
+
+	// if (distance > actualDist){
+
+	// 	dx /= targetDist;
+	// 	std::cout << "GREATER!" << std::endl;
+	// 	std::cout << "target distance: " << targetDist <<std::endl;
+	// 	std::cout  << " actual distance: "<< actualDist <<std::endl;
+	// 	std::cout << "interpolated distance : " << distance << std::endl;
+
+
+	// }
+
+
 	if (east){
 		// std::cout << "RIGHT" << std::endl;
 		if (collision->checkCollision(getX() + scale, getY())){

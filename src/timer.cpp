@@ -69,9 +69,7 @@ Timer::~Timer(void){
 }
 
 void Timer::Reset(void) {
-	std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
 	mStartTicks = std::chrono::steady_clock::now();
-	std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(mStart);
 	mDeltaTime = 0.0f;
 }
 
@@ -80,6 +78,8 @@ float Timer::DeltaTime(void){
 }
 
 void Timer::update(void){
-
+	std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
+	std::chrono::duration<float> time = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - mStartTicks);
+	mDeltaTime = time.count();
 }
 

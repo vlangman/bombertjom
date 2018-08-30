@@ -31,6 +31,7 @@
 #include <ctime>
 #include <ratio>
 #include <chrono>
+#include <iostream>
 
 class Timer
 {

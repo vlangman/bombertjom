@@ -102,12 +102,7 @@ void	Game::stepGame(float DeltaTime){
 	auto player = dynamic_cast<Player*>(this->m_Player);
 	player->movePlayer(DeltaTime);
 
-	sdl.clearScreen();
-
-	for (auto i : renderList)
-	{
-		sdl.draw(i->getOwner()->getX(),i->getOwner()->getY(),i->getWidth(),i->getHeight(),i->getColor());
-	}
+	
 }
 
 
@@ -120,9 +115,9 @@ int 	Game::runLoop(void)
 	float frameCounter = 0.0f;
 	float Delta = 0.0f;
 
+	m_Timer->update();
 	while (m_shouldRun)
 	{
-
 		m_Timer->update();
 		Delta = m_Timer->DeltaTime();
 		timeStep += Delta;
@@ -133,19 +128,26 @@ int 	Game::runLoop(void)
 			Delta = m_Timer->DeltaTime();
 			//increment the time for last frame
 			timeStep += Delta;
-			//step the game with the current delta time
-			stepGame(Delta);
-			//increment the stepCounter
-			frameCounter++;
+			//step the game with the current delta time if time avaliable
+			if (timeStep < (1/frameRate))
+				stepGame(Delta);
+			else
+				break;
 		}
-
+		m_Timer->Reset();
+		//reset timer so we can include how long render takes
+		sdl.clearScreen();
+		for (auto i : renderList)
+		{
+			sdl.draw(i->getOwner()->getX(),i->getOwner()->getY(),i->getWidth(),i->getHeight(),i->getColor());
+		}
 		sdl.displayScreen();
 
-		// float FPS = 1.0f/m_Timer->DeltaTime();
-		// sdl.drawFps(FPS);
+		float FPS = 1.0f/timeStep;
+		sdl.drawFps(FPS);
 		timeStep = 0;
 		frameCounter = 0;
-		m_Timer->Reset();
+		
 	}
 	return 1;
 
