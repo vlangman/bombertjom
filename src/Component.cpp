@@ -180,6 +180,10 @@ bool CollisionComponent::checkCollision(double x, double y){
 
 // ================ TIMER COMPONENT ============================== //
 
+void	TimerComponent::update(void){
+	return;
+}
+
 TimerComponent *TimerComponent::sInstance = NULL;
 
 TimerComponent *TimerComponent::Instance(Entity *owner){
@@ -206,17 +210,18 @@ TimerComponent::~TimerComponent(void){
 }
 
 void TimerComponent::Reset(void) {
-	mStartTicks = SDL_GetTicks();
-	mDeltaTime = 0.0f;
+	mElapsedTime = 0.0f;
 }
 
-float TimerComponent::DeltaTime(void){
-	return mDeltaTime;
-}
-
-void TimerComponent::update(void){
+void TimerComponent::UpdateElapsed(float DeltaTime){
 	//ticks in miliseconds (/1000 for microsecs)
-	mDeltaTime = (SDL_GetTicks() - mStartTicks) * 0.001f;
-	if (mDeltaTime < 0.001f)
-		mDeltaTime = 0.001f;
+	mElapsedTime += DeltaTime;
+}
+
+
+bool TimerComponent::checkTimer(float time){
+	std::cout << "component TIMER: " << mElapsedTime << std::endl;
+	if (mElapsedTime > time)
+		return true;
+	return false;
 }

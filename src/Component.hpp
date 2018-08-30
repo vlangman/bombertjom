@@ -67,8 +67,7 @@ class TimerComponent : public Component
 {
 private:
 	static TimerComponent *	sInstance;
-	unsigned int 			mStartTicks;
-	float					mDeltaTime;
+	float					mElapsedTime;
 
 public:
 
@@ -80,7 +79,9 @@ public:
 	static void		Release(void);
 
 	void	Reset(void);
-	float	DeltaTime(void);
-	//update the game clock
+	bool	checkTimer(float time);
+
+	//update the clock with latest tick from game loop
+	void	UpdateElapsed(float DeltaTime);
 	void	update(void);
 };

@@ -2,7 +2,7 @@
 #include <iostream>
 #include "sdlLib.hpp"
 #include "gameWorld.hpp"
-// #include "Component.hpp"
+#include "timer.hpp"
 #include <vector>
 #include <unistd.h>
 
@@ -22,7 +22,7 @@ class Game
 		bool			m_shouldRun;
 		bool 			verbose;
 		SdlLib			sdl;
-		TimerComponent*	m_Timer;
+		Timer*			m_Timer;
 		const float 	frameRate = 60;
 		GameWorld 		gameWorld;
 		Entity 			*m_Player;

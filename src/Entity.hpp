@@ -8,6 +8,7 @@ class RenderDescription;
 class Component;
 class GraphicsComponent;
 class CollisionComponent;
+class TimerComponent;
 class PlayerInputComponent;
 class MovementComponent;
 
@@ -86,12 +87,14 @@ public:
 
 class Bomb : public Entity 
 {
+private:
+	bool	isAlive;
 public:
 
 	//COMPONENTS
 	GraphicsComponent *graphics;
 	CollisionComponent *collision;
-	// TimerComponent * timer;
+	TimerComponent * timer;
 
 	//canonical constructors
 	Bomb(void);
@@ -103,14 +106,7 @@ public:
 	Bomb(Game *world);
 
 	//BOMB FUNCTIONS
-
+	bool 	checkAlive(void);
 
 	void	update();
-};
-
-class GameClock : public Entity{
-public:
-	GameClock(Game *world);
-	~GameClock(void);
-	void update(void);
 };

@@ -90,7 +90,11 @@ void	Game::stepGame(float DeltaTime){
 
 	for (auto i: entityList){
 		if (i->getEntityType() == E_ENTITY_TYPE::ET_BOMB){
-
+			i->update();
+			auto bomb = dynamic_cast<Bomb*>(i);
+			if (!bomb->checkAlive()){
+				std::cout << "KABOOOOM!" << std::endl;
+			}
 		}
 	}
 
@@ -159,13 +163,12 @@ void 	Game::init(int _verbose, int width, int height, bool fullscreen){
 	this->gameWorld.init("dank.map");
 
 	//use instance to create and reset timer
-	GameClock *gameClock = new GameClock(this);
-	m_Timer = TimerComponent::Instance(gameClock);
+	m_Timer = Timer::Instance();
 	return;
 }
 
 void	Game::closeGame(void){
-	TimerComponent::Release();
+	Timer::Release();
 	m_Timer = NULL;
 	exit(1);
 }

@@ -49,11 +49,9 @@ void	Player::movePlayer(float DeltaTime){
 		if (collision->checkCollision(getX() - scale, getY())){
 			setX(getX() - scale);
 		}
-		
 	}
 	if (south){
 		// std::cout << "DOWN" << std::endl;
-
 		if (collision->checkCollision(getX(), getY() + scale))
 		{
 			setY(getY() + scale);
@@ -172,25 +170,21 @@ Bomb & Bomb::operator=(const Bomb & _rhs){
 Bomb::Bomb(Game *world) : Entity(world)
 {
 	mType = ET_BOMB;
+	isAlive = true;
 }
 
 //BOMB FUNCTIONS
 
 void	Bomb::update(void){
+	timer->UpdateElapsed(m_world->getDeltaTime());
+	if (timer->checkTimer(3.0f)){
+		isAlive = false;
+	}
 	return;
 }
 
-// ============================== gameClock ================================ //
-
-
-GameClock::GameClock(Game *world) : Entity(world){
-	return;
-}
-
-GameClock::~GameClock(void){
-	return;
-}
-
-void GameClock::update(void){
-	return;
+bool 	Bomb::checkAlive(void){
+	if (isAlive)
+		return true;
+	return false;
 }
