@@ -17,6 +17,7 @@ enum E_ENTITY_TYPE
 	ET_PLAYER,
 	ET_WALL,
 	ET_BOMB,
+	ET_ENEMY,
 	ET_NONE
 };
 
@@ -108,4 +109,25 @@ public:
 
 	//BOMB FUNCTIONS
 	void	update();
+};
+
+
+class Enemy : public Entity
+{
+private:
+	int 	mDirection;
+public:
+	GraphicsComponent *graphics;
+	CollisionComponent *collision;
+	TimerComponent * timer;
+
+	Enemy(void);
+	~Enemy(void);
+
+	Enemy(Game *world);
+	
+	void update(void);
+
+	void newDirection(void);
+	void moveEnemy(void);
 };

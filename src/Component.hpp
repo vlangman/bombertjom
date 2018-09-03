@@ -67,7 +67,7 @@ public:
 class TimerComponent : public Component 
 {
 private:
-	float					mElapsedTime;
+	float	mElapsedTime;
 
 public:
 

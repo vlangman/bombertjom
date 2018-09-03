@@ -54,3 +54,18 @@ Entity *Builder::createBomb(double x, double y, double width, double height){
 	return bomb;
 
 }
+
+
+Entity *Builder::createEnemy(double x, double y, double width, double height){
+	Enemy *enemy = new Enemy(m_world);
+
+	enemy->setWidth(width);
+	enemy->setHeight(height);
+
+	enemy->graphics = new GraphicsComponent(enemy, E_COLOR::COLOR_BLUE, width, height);
+	enemy->timer = new TimerComponent(enemy);
+	enemy->collision = new CollisionComponent(enemy);
+	
+	enemy->setPosition(x, y);
+	return (enemy);
+}

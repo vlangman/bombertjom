@@ -195,3 +195,77 @@ void	Bomb::update(void){
 	}
 	return;
 }
+
+// ============================== ENEMY ================================ //
+
+Enemy::Enemy(void){
+	return;
+}
+
+Enemy::~Enemy(void){
+	return;
+}
+
+Enemy::Enemy(Game * world)
+: Entity(world)
+{
+	mType = ET_ENEMY;
+	mDirection = 0;
+	return;
+}
+
+void Enemy::update(void){
+	moveEnemy();
+	return;
+}
+
+
+void Enemy::newDirection(void){
+
+	std::vector<int> validMoves;
+	float frameRate = m_world->getFrameRate();
+	float DeltaTime = m_world->getDeltaTime();
+	if (DeltaTime > 1.0f/frameRate){
+		DeltaTime = 1.0f/frameRate;
+	}
+
+	float scale = DeltaTime * 100000.0f;
+	// std::cout << "RIGHT" << std::endl;
+	if (collision->checkCollision(getX() + scale, getY())){
+		validMoves.push_back(1);
+		// setX(getX() + scale);
+	}
+	// std::cout << "LEFT" << std::endl;
+	if (collision->checkCollision(getX() - scale, getY())){
+		validMoves.push_back(2);
+		// setX(getX() - scale);
+	}
+	// std::cout << "DOWN" << std::endl;
+	if (collision->checkCollision(getX(), getY() + scale))
+	{
+		validMoves.push_back(3);
+		// setY(getY() + scale);
+	}
+	// std::cout << "UP" << std::endl;
+	if (collision->checkCollision(getX(), getY() - scale)){
+		validMoves.push_back(4);
+		// setY(getY() - scale);
+	}
+
+	int iSecret = rand() %  validMoves.size() + 1;
+	std::cout << "RANDOM MOVE DIRECTION: " << iSecret << std::endl;
+	mDirection = iSecret;
+
+	return;
+}
+
+
+void	Enemy::moveEnemy(){
+	if (mDirection != 0){
+		std::cout << "moving player in DIRECTION: " << mDirection << std::endl;
+	}
+	else {
+		newDirection();
+	}
+}
+

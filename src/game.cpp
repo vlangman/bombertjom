@@ -64,6 +64,14 @@ void	Game::buildGameObjects(void){
 				Entity *wall = builder.createWall(x*increment_x,y*increment_y,increment_x, increment_y);
 				addEntity(wall);
 			}
+			//if the number read is a 2 (ascii 50)
+
+			if (map[x][y] == 50)
+			{
+
+				Entity *enemy = builder.createEnemy(x*increment_x,y*increment_y,increment_x, increment_y);
+				addEntity(enemy);
+			}
 		}
 	}
 
@@ -92,32 +100,15 @@ void	Game::stepGame(float DeltaTime){
 		if (i->getEntityType() == E_ENTITY_TYPE::ET_BOMB){
 			i->update();
 		}
+		if (i->getEntityType() == E_ENTITY_TYPE::ET_ENEMY){
+			i->update();
+		}
 	}
-	cleanUp();
-
-	// for (std::vector<Entity*>::iterator it= entityList.begin(); it!= entityList.end(); it++) 
-	// {
-	// 	if ((*it)->getEntityType() == E_ENTITY_TYPE::ET_BOMB)
-	// 	{
-	// 		(*it)->update();
-	// 		auto bomb = dynamic_cast<Bomb*>((*it));
-	// 		if (!bomb->checkAlive()){
-	// 			delete ((*it));
-	// 			std::cout << "deleted bomb" << std::endl;
-	// 			it = entityList.erase(it);
-	// 			std::cout << "deleted bomb from list" << std::endl;
-
-	// 		}
-	// 	}
-	
-	// }
-
-
-	//this is some yikes code xD
+	//move the player
 	auto player = dynamic_cast<Player*>(this->m_Player);
 	player->movePlayer(DeltaTime);
 
-	
+	cleanUp();	
 }
 
 
@@ -202,6 +193,10 @@ void	Game::addEntity(Entity *entity)
 	}
 	else if (entity->getEntityType() == E_ENTITY_TYPE::ET_BOMB){
 		renderList.push_back(dynamic_cast<Bomb*>(entity)->graphics);
+	}
+	else if (entity->getEntityType() == E_ENTITY_TYPE::ET_ENEMY){
+		renderList.push_back(dynamic_cast<Enemy*>(entity)->graphics);
+		colliderList.push_back(dynamic_cast<Enemy*>(entity)->collision);
 	}
 }
 
