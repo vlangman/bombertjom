@@ -39,7 +39,6 @@ void	Player::movePlayer(float DeltaTime){
 
 	float scale = DeltaTime * 100000.0f;
 
-
 	if (east){
 		// std::cout << "RIGHT" << std::endl;
 		if (collision->checkCollision(getX() + scale, getY())){
@@ -215,6 +214,7 @@ Enemy::Enemy(Game * world)
 }
 
 void Enemy::update(void){
+	timer->UpdateElapsed(m_world->getDeltaTime());
 	moveEnemy();
 	return;
 }
@@ -230,42 +230,78 @@ void Enemy::newDirection(void){
 	}
 
 	float scale = DeltaTime * 100000.0f;
-	// std::cout << "RIGHT" << std::endl;
+
 	if (collision->checkCollision(getX() + scale, getY())){
 		validMoves.push_back(1);
-		// setX(getX() + scale);
 	}
-	// std::cout << "LEFT" << std::endl;
 	if (collision->checkCollision(getX() - scale, getY())){
 		validMoves.push_back(2);
-		// setX(getX() - scale);
 	}
-	// std::cout << "DOWN" << std::endl;
 	if (collision->checkCollision(getX(), getY() + scale))
 	{
 		validMoves.push_back(3);
-		// setY(getY() + scale);
 	}
-	// std::cout << "UP" << std::endl;
 	if (collision->checkCollision(getX(), getY() - scale)){
 		validMoves.push_back(4);
-		// setY(getY() - scale);
 	}
 
-	int iSecret = rand() %  validMoves.size() + 1;
+	srand(time(NULL));
+	int iSecret = static_cast<int>((rand() % 3) + 1) ;  // rand() %  validMoves.size() + 1;
 	std::cout << "RANDOM MOVE DIRECTION: " << iSecret << std::endl;
 	mDirection = iSecret;
+
 
 	return;
 }
 
 
 void	Enemy::moveEnemy(){
+
+	float frameRate = m_world->getFrameRate();
+	float DeltaTime = m_world->getDeltaTime();
+	if (DeltaTime > 1.0f/frameRate){
+		DeltaTime = 1.0f/frameRate;
+	}
+	float scale = DeltaTime * 100000.0f;
+
 	if (mDirection != 0){
-		std::cout << "moving player in DIRECTION: " << mDirection << std::endl;
+		std::cout << "moving ENEMY in DIRECTION: " << mDirection << std::endl;
+		switch (mDirection){
+			case 1:
+				if (!collision->checkCollision(getX() + scale, getY())){
+					mDirection = 0;
+					break;
+				}
+				setX(getX() + scale);
+				break;
+			case 2:
+				if (!collision->checkCollision(getX() - scale, getY())){
+					mDirection = 0;
+					break;
+				}
+				setX(getX() - scale);
+				break;
+			case 3:
+				if (!collision->checkCollision(getX(), getY() + scale)){
+					mDirection = 0;
+					break;
+				}
+				setY(getY() + scale);
+				break;
+			case 4:
+				if (!collision->checkCollision(getX(), getY() - scale)){
+					mDirection = 0;
+					break;
+				}
+				setY(getY() - scale);
+				break;
+		}
 	}
 	else {
-		newDirection();
+		if (timer->checkTimer(1.0f)){
+			newDirection();
+			timer->Reset();
+		}
+		
 	}
 }
-

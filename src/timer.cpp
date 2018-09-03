@@ -38,7 +38,8 @@ float Timer::DeltaTime(void){
 
 void Timer::update(void){
 	std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
-	std::chrono::duration<float> delta = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime - mStartTicks);
+	//LISTEN FUCKER DONT CHANGE THE NANOSECONDS DOOS!
+	std::chrono::duration<float> delta = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - mStartTicks);
 	mStartTicks = currentTime;
 	mDeltaTime = delta.count();
 }

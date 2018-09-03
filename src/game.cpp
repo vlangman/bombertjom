@@ -68,7 +68,6 @@ void	Game::buildGameObjects(void){
 
 			if (map[x][y] == 50)
 			{
-
 				Entity *enemy = builder.createEnemy(x*increment_x,y*increment_y,increment_x, increment_y);
 				addEntity(enemy);
 			}
@@ -86,7 +85,6 @@ void	Game::buildGameObjects(void){
 void	Game::stepGame(float DeltaTime){
 	//calulate and draw
 	E_EVENT event = sdl.handleEvents();
-
 	if (event == E_EVENT::EVENT_CLOSE_WINDOW){
 		m_shouldRun = false;
 	}
@@ -100,7 +98,7 @@ void	Game::stepGame(float DeltaTime){
 		if (i->getEntityType() == E_ENTITY_TYPE::ET_BOMB){
 			i->update();
 		}
-		if (i->getEntityType() == E_ENTITY_TYPE::ET_ENEMY){
+		else if (i->getEntityType() == E_ENTITY_TYPE::ET_ENEMY){
 			i->update();
 		}
 	}
@@ -118,7 +116,6 @@ int 	Game::runLoop(void)
 	buildGameObjects();
 	m_Timer->Reset();
 	float timeStep = 0.0f;
-	float frameCounter = 0.0f;
 	float Delta = 0.0f;
 
 	m_Timer->update();
@@ -136,9 +133,15 @@ int 	Game::runLoop(void)
 			timeStep += Delta;
 			//step the game with the current delta time if time avaliable
 			if (timeStep < (1/frameRate))
+			{
+				std::cout << "DELTA TIME: " << Delta << std::endl;
 				stepGame(Delta);
+			}
 			else
+			{
+				std::cout << "TARGET FRAMERATE LIMIT" << std::endl;
 				break;
+			}
 		}
 		m_Timer->Reset();
 		//reset timer so we can include how long render takes
@@ -148,10 +151,13 @@ int 	Game::runLoop(void)
 			sdl.draw(i->getOwner()->getX(),i->getOwner()->getY(),i->getWidth(),i->getHeight(),i->getColor());
 		}
 		sdl.displayScreen();
-		// float FPS = 1.0f/timeStep;
+
+		float FPS = 1.0f/timeStep;
+		// float FPS = 1.0f/Delta;
+
+		
 		// sdl.drawFps(FPS);
 		timeStep = 0;
-		frameCounter = 0;
 	}
 	return 1;
 
@@ -166,7 +172,7 @@ void 	Game::init(int _verbose, int width, int height, bool fullscreen){
 	this->sdl.init(width, height, this->verbose);
 	this->m_shouldRun = true;
 	//instantiates the game world
-	this->gameWorld.init("dank.map");
+	this->gameWorld.init("test2.map");
 
 	//use instance to create and reset timer
 	m_Timer = Timer::Instance();
