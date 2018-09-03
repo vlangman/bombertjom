@@ -91,12 +91,27 @@ void	Game::stepGame(float DeltaTime){
 	for (auto i: entityList){
 		if (i->getEntityType() == E_ENTITY_TYPE::ET_BOMB){
 			i->update();
-			auto bomb = dynamic_cast<Bomb*>(i);
-			if (!bomb->checkAlive()){
-				std::cout << "KABOOOOM!" << std::endl;
-			}
 		}
 	}
+	cleanUp();
+
+	// for (std::vector<Entity*>::iterator it= entityList.begin(); it!= entityList.end(); it++) 
+	// {
+	// 	if ((*it)->getEntityType() == E_ENTITY_TYPE::ET_BOMB)
+	// 	{
+	// 		(*it)->update();
+	// 		auto bomb = dynamic_cast<Bomb*>((*it));
+	// 		if (!bomb->checkAlive()){
+	// 			delete ((*it));
+	// 			std::cout << "deleted bomb" << std::endl;
+	// 			it = entityList.erase(it);
+	// 			std::cout << "deleted bomb from list" << std::endl;
+
+	// 		}
+	// 	}
+	
+	// }
+
 
 	//this is some yikes code xD
 	auto player = dynamic_cast<Player*>(this->m_Player);
@@ -123,7 +138,7 @@ int 	Game::runLoop(void)
 		timeStep += Delta;
 
 		while(timeStep < (1/frameRate)){
-			//update timer
+			//update timer sets start time to now
 			m_Timer->update();
 			Delta = m_Timer->DeltaTime();
 			//increment the time for last frame
@@ -142,12 +157,10 @@ int 	Game::runLoop(void)
 			sdl.draw(i->getOwner()->getX(),i->getOwner()->getY(),i->getWidth(),i->getHeight(),i->getColor());
 		}
 		sdl.displayScreen();
-
-		float FPS = 1.0f/timeStep;
-		sdl.drawFps(FPS);
+		// float FPS = 1.0f/timeStep;
+		// sdl.drawFps(FPS);
 		timeStep = 0;
 		frameCounter = 0;
-		
 	}
 	return 1;
 
@@ -192,7 +205,60 @@ void	Game::addEntity(Entity *entity)
 	}
 }
 
-// void	cleanup();
+void	Game::cleanUp(void){
+
+	//INPUT HANDLER LIST;
+	for(std::vector<PlayerInputComponent*>::iterator it = inputHandlers.begin(); it!= inputHandlers.end(); /*it++*/){
+		Entity *entity = (*it)->getOwner();
+
+		if (!entity->isAlive()){
+				delete ((*it));
+				it = inputHandlers.erase(it);
+		}
+		else
+			it++;
+	}
+
+	//RENDER LIST
+	for(std::vector<GraphicsComponent*>::iterator it = renderList.begin(); it!= renderList.end(); /*it++*/){
+		Entity *entity = (*it)->getOwner();
+
+		if (!entity->isAlive()){
+
+				delete ((*it));
+				it = renderList.erase(it);
+		}
+		else
+			it++;
+	}
+
+	//COLLIDER LIST
+	for(std::vector<CollisionComponent*>::iterator it = colliderList.begin(); it!= colliderList.end(); /*it++*/){
+		Entity *entity = (*it)->getOwner();
+
+		if (!entity->isAlive()){
+			delete ((*it));
+
+			it = colliderList.erase(it);
+		}
+		else
+			it++;
+	}
+
+	//ENTITY LIST MUST COME LAST !!!
+	for (std::vector<Entity*>::iterator it= entityList.begin(); it!= entityList.end(); /*it++*/) 
+	{
+		if (!(*it)->isAlive()){
+			delete ((*it));
+			it = entityList.erase(it);
+			break;
+		}
+		else
+			it++;
+	}
+
+};
+
 
 
 //utility
@@ -220,10 +286,13 @@ void Game::handleEvents()
 
 
 float Game::getDeltaTime(void){
-	m_Timer->update();
 	return m_Timer->DeltaTime();
 }
 
 double Game::getScale(void) const{
 	return  scale;
+}
+
+float	Game::getFrameRate(void) const{
+	return frameRate;
 }

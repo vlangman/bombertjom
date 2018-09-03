@@ -47,7 +47,7 @@ Entity *Builder::createBomb(double x, double y, double width, double height){
 	bomb->setHeight(height);
 
 	bomb->graphics = new GraphicsComponent(bomb, E_COLOR::COLOR_YELLOW, width, height);
-	bomb->timer = TimerComponent::Instance(bomb);
+	bomb->timer = new TimerComponent(bomb);
 	bomb->setPosition(x,y);
 
 	m_world->addEntity(bomb);

@@ -23,7 +23,7 @@ class Game
 		bool 			verbose;
 		SdlLib			sdl;
 		Timer*			m_Timer;
-		const float 	frameRate = 100;
+		const float 	frameRate = 60;
 		GameWorld 		gameWorld;
 		Entity 			*m_Player;
 		double			scale;
@@ -52,6 +52,7 @@ class Game
 		void 	handleEvents(void);
 		void	closeGame(void);
 		void	stepGame(float DeltaTime);
+		void	cleanUp(void);
 		
 		
 		// void	cleanup();
@@ -61,5 +62,6 @@ class Game
 		float	getDeltaTime(void);
 		void	buildGameObjects(void);
 		void	addEntity(Entity *entity);
+		float	getFrameRate(void) const;
 
 };

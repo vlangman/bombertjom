@@ -1,7 +1,6 @@
 #include "Entity.hpp"
 #include "Component.hpp"
 
-
 // =============================== PLAYER =============================== //
 void Player::update()
 {
@@ -33,28 +32,12 @@ void    Player::setDirection(int vertical, int horizontal){
 }
 
 void	Player::movePlayer(float DeltaTime){
+	float frameRate = m_world->getFrameRate();
+	if (DeltaTime > 1.0f/frameRate){
+		DeltaTime = 1.0f/frameRate;
+	}
 
-
-
-	// float scale = 0.0f;
-	// float targetDist = 1.0f/60.0f * 5000.0f;
-	float scale = DeltaTime * 5000.0f;
-
-	// float distance = targetDist - actualDist;
-	// // float distance = sqrt(dx*dx+dx*dx);
-	// std::cout << "DIST CHECK:  "<< distance << std::endl;
-
-
-	// if (distance > actualDist){
-
-	// 	dx /= targetDist;
-	// 	std::cout << "GREATER!" << std::endl;
-	// 	std::cout << "target distance: " << targetDist <<std::endl;
-	// 	std::cout  << " actual distance: "<< actualDist <<std::endl;
-	// 	std::cout << "interpolated distance : " << distance << std::endl;
-
-
-	// }
+	float scale = DeltaTime * 100000.0f;
 
 
 	if (east){
@@ -110,8 +93,13 @@ Wall::Wall(Game *world)
 }
 
 // ============================== ENTITY ================================ //
+
+Entity::~Entity(void){
+	return;
+}
+
 Entity::Entity(void){
-	std::cout << "THIS SHOULD NEVER BE CALLED!! REEEEEEEĒEĒ" << std::endl;
+	std::cout << "THIS SHOULD NEVER BE CALLED!! REEEEEEEĒEĒ... call the (Game * world) entity constructor pls boss" << std::endl;
 	return;
 }
 
@@ -119,6 +107,11 @@ Entity::Entity(Game *world)
 {
 	m_world = world;
 	mType = ET_NONE;
+	mIsAlive = true;
+}
+
+bool Entity::isAlive(void){
+	return mIsAlive;
 }
 
 E_ENTITY_TYPE Entity::getEntityType()
@@ -166,6 +159,7 @@ Game *Entity::getWorld(){
 
 // ============================== BOMB ================================ //
 
+
 //canonical constructors
 Bomb::Bomb(void) : Entity(){
 	return;
@@ -190,7 +184,6 @@ Bomb & Bomb::operator=(const Bomb & _rhs){
 Bomb::Bomb(Game *world) : Entity(world)
 {
 	mType = ET_BOMB;
-	isAlive = true;
 }
 
 //BOMB FUNCTIONS
@@ -198,13 +191,7 @@ Bomb::Bomb(Game *world) : Entity(world)
 void	Bomb::update(void){
 	timer->UpdateElapsed(m_world->getDeltaTime());
 	if (timer->checkTimer(3.0f)){
-		isAlive = false;
+		mIsAlive = false;
 	}
 	return;
-}
-
-bool 	Bomb::checkAlive(void){
-	if (isAlive)
-		return true;
-	return false;
 }

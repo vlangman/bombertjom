@@ -39,6 +39,7 @@ class Timer
 private:
 	static Timer *	sInstance;
 	float			mDeltaTime;
+	float			mElapsedTime;
 
 	std::chrono::steady_clock::time_point mStartTicks;
 

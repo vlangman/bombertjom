@@ -10,6 +10,10 @@ Component::Component(Entity *owner)
 	m_owner = owner;
 }
 
+Component::~Component()
+{
+	std::cout << "COMPONENT DECONSTRUCTOR CALLED" << std::endl;
+}
 // ================= GRAPHICS COMPONENT ============================ //
 
 GraphicsComponent::GraphicsComponent(Entity *owner, E_COLOR color, double width, double height)
@@ -184,20 +188,6 @@ void	TimerComponent::update(void){
 	return;
 }
 
-TimerComponent *TimerComponent::sInstance = NULL;
-
-TimerComponent *TimerComponent::Instance(Entity *owner){
-	if (sInstance == NULL){
-		sInstance = new TimerComponent(owner);
-	}
-	return sInstance;
-}
-
-void TimerComponent::Release(void){
-	delete sInstance;
-	sInstance = NULL;
-}
-
 TimerComponent::TimerComponent(Entity *owner)
 : Component(owner)
 {
@@ -220,7 +210,7 @@ void TimerComponent::UpdateElapsed(float DeltaTime){
 
 
 bool TimerComponent::checkTimer(float time){
-	std::cout << "component TIMER: " << mElapsedTime << std::endl;
+	// std::cout << "component TIMER: " << mElapsedTime << std::endl;
 	if (mElapsedTime > time)
 		return true;
 	return false;

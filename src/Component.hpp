@@ -11,7 +11,8 @@ protected:
 public:
 	Component(Entity *owner);
 	Entity *getOwner();
-
+	
+	~Component(void);
 	virtual void update() = 0;
 };
 
@@ -66,17 +67,12 @@ public:
 class TimerComponent : public Component 
 {
 private:
-	static TimerComponent *	sInstance;
 	float					mElapsedTime;
 
 public:
 
 	TimerComponent(Entity *owner);
 	~TimerComponent(void);
-
-
-	static TimerComponent *	Instance(Entity *owner);
-	static void		Release(void);
 
 	void	Reset(void);
 	bool	checkTimer(float time);

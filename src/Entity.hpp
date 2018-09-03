@@ -29,12 +29,14 @@ protected:
 	double mHeight;
 	E_ENTITY_TYPE mType;
 	Game *m_world;
+	bool	mIsAlive;
 
 public:
 	Entity(void);
 
 	Entity(Game *world);
 	virtual void update() = 0;
+	virtual ~Entity() = 0;
 	
 	double getX();
 	double getY();
@@ -47,6 +49,7 @@ public:
 	void setHeight(float _height);
 	float getWidth(void) const;
 	float getHeight(void) const;
+	bool  isAlive(void);
 
 	Game *getWorld();
 
@@ -87,8 +90,6 @@ public:
 
 class Bomb : public Entity 
 {
-private:
-	bool	isAlive;
 public:
 
 	//COMPONENTS
@@ -106,7 +107,5 @@ public:
 	Bomb(Game *world);
 
 	//BOMB FUNCTIONS
-	bool 	checkAlive(void);
-
 	void	update();
 };
