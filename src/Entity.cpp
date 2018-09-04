@@ -319,7 +319,7 @@ void	Enemy::moveEnemy(){
 		}
 	}
 	else {
-		if (timer->checkTimer(0.1f)){
+		if (timer->checkTimer(0.5f)){
 			newDirection();
 			timer->Reset();
 		}

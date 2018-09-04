@@ -129,10 +129,24 @@ int 	Game::runLoop(void)
 		renderTime = Delta;
 		timeStep += Delta;
 
-		while(timeStep + renderTime  < (1/frameRate)){
+
+		if (renderTime < 1.0f/frameRate){
+			std::cout << "\033[0;32m";
+			frameRate+=0.1f;
+		}
+		//catch up by dropping the frame rate to compensate for long render times
+		else{
+			frameRate-=0.1f;
+			// frameRate = 1.0f/renderTime;
+			std::cout << "\033[0;31m";
+		}
+		
+		std::cout << "[FPS: " <<frameRate <<"]" << renderTime << " / " << 1.0f/frameRate << std::endl;
+		std::cout << "\033[0m";		
+		while(timeStep < (1.0f/frameRate)){
+			Delta = m_Timer->DeltaTime();
 			//update timer sets start time to now
 			m_Timer->update();
-			Delta = m_Timer->DeltaTime();
 			timeStep += Delta;
 			stepGame(Delta);
 		}
@@ -169,7 +183,7 @@ void 	Game::init(int _verbose, int width, int height, bool fullscreen){
 	this->sdl.init(width, height, this->verbose);
 	this->m_shouldRun = true;
 	//instantiates the game world
-	this->gameWorld.init("hehe.map");
+	this->gameWorld.init("test2.map");
 
 	//use instance to create and reset timer
 	m_Timer = Timer::Instance();
