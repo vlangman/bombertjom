@@ -117,31 +117,24 @@ int 	Game::runLoop(void)
 	m_Timer->Reset();
 	float timeStep = 0.0f;
 	float Delta = 0.0f;
+	float renderTime = 0;
+	float frameCount = 0.0f;
+	float sumTimes = 0.0f;
 
 	m_Timer->update();
 	while (m_shouldRun)
 	{
 		m_Timer->update();
 		Delta = m_Timer->DeltaTime();
+		renderTime = Delta;
 		timeStep += Delta;
 
-		while(timeStep < (1/frameRate)){
+		while(timeStep + renderTime  < (1/frameRate)){
 			//update timer sets start time to now
 			m_Timer->update();
 			Delta = m_Timer->DeltaTime();
-			//increment the time for last frame
 			timeStep += Delta;
-			//step the game with the current delta time if time avaliable
-			if (timeStep < (1/frameRate))
-			{
-				std::cout << "DELTA TIME: " << Delta << std::endl;
-				stepGame(Delta);
-			}
-			else
-			{
-				std::cout << "TARGET FRAMERATE LIMIT" << std::endl;
-				break;
-			}
+			stepGame(Delta);
 		}
 		m_Timer->Reset();
 		//reset timer so we can include how long render takes
@@ -152,12 +145,16 @@ int 	Game::runLoop(void)
 		}
 		sdl.displayScreen();
 
-		float FPS = 1.0f/timeStep;
-		// float FPS = 1.0f/Delta;
-
-		
-		// sdl.drawFps(FPS);
+		// float FPS = 1.0f/timeStep;
+		sumTimes += timeStep;
+		// if (sumTimes >= 1.0f){
+		// 	float FPS = frameCount/sumTimes;
+		// 	sdl.drawFps(FPS);
+		// 	sumTimes = 0;
+		// 	frameCount = 0;
+		// }
 		timeStep = 0;
+		frameCount++;
 	}
 	return 1;
 
@@ -172,7 +169,7 @@ void 	Game::init(int _verbose, int width, int height, bool fullscreen){
 	this->sdl.init(width, height, this->verbose);
 	this->m_shouldRun = true;
 	//instantiates the game world
-	this->gameWorld.init("test2.map");
+	this->gameWorld.init("hehe.map");
 
 	//use instance to create and reset timer
 	m_Timer = Timer::Instance();
@@ -207,7 +204,6 @@ void	Game::addEntity(Entity *entity)
 }
 
 void	Game::cleanUp(void){
-
 	//INPUT HANDLER LIST;
 	for(std::vector<PlayerInputComponent*>::iterator it = inputHandlers.begin(); it!= inputHandlers.end(); /*it++*/){
 		Entity *entity = (*it)->getOwner();
@@ -219,7 +215,6 @@ void	Game::cleanUp(void){
 		else
 			it++;
 	}
-
 	//RENDER LIST
 	for(std::vector<GraphicsComponent*>::iterator it = renderList.begin(); it!= renderList.end(); /*it++*/){
 		Entity *entity = (*it)->getOwner();
@@ -232,7 +227,6 @@ void	Game::cleanUp(void){
 		else
 			it++;
 	}
-
 	//COLLIDER LIST
 	for(std::vector<CollisionComponent*>::iterator it = colliderList.begin(); it!= colliderList.end(); /*it++*/){
 		Entity *entity = (*it)->getOwner();
@@ -245,7 +239,6 @@ void	Game::cleanUp(void){
 		else
 			it++;
 	}
-
 	//ENTITY LIST MUST COME LAST !!!
 	for (std::vector<Entity*>::iterator it= entityList.begin(); it!= entityList.end(); /*it++*/) 
 	{
@@ -257,7 +250,6 @@ void	Game::cleanUp(void){
 		else
 			it++;
 	}
-
 };
 
 

@@ -36,32 +36,36 @@ void	Player::movePlayer(float DeltaTime){
 	if (DeltaTime > 1.0f/frameRate){
 		DeltaTime = 1.0f/frameRate;
 	}
-
 	float scale = DeltaTime * 100000.0f;
+	//maybe check if next move is greater that game get scale
+	if (scale > m_world->getScale()){
+		scale =  m_world->getScale() - 1.0f;
+	}
+
 
 	if (east){
 		// std::cout << "RIGHT" << std::endl;
-		if (collision->checkCollision(getX() + scale, getY())){
+		if (collision->checkCollision(getX() + scale, getY(), getEntityType())){
 			setX(getX() + scale);
 		}
 		
 	}
 	if (west){
 		// std::cout << "LEFT" << std::endl;
-		if (collision->checkCollision(getX() - scale, getY())){
+		if (collision->checkCollision(getX() - scale, getY(), getEntityType())){
 			setX(getX() - scale);
 		}
 	}
 	if (south){
 		// std::cout << "DOWN" << std::endl;
-		if (collision->checkCollision(getX(), getY() + scale))
+		if (collision->checkCollision(getX(), getY() + scale, getEntityType()))
 		{
 			setY(getY() + scale);
 		}
 	}
 	if (north){
 		// std::cout << "UP" << std::endl;
-		if (collision->checkCollision(getX(), getY() - scale)){
+		if (collision->checkCollision(getX(), getY() - scale, getEntityType())){
 			setY(getY() - scale);
 		}
 	}
@@ -230,24 +234,26 @@ void Enemy::newDirection(void){
 	}
 
 	float scale = DeltaTime * 100000.0f;
+	if (scale > m_world->getScale()){
+		return;
+	}
 
-	if (collision->checkCollision(getX() + scale, getY())){
+	if (collision->checkCollision(getX() + scale, getY(), getEntityType())){
 		validMoves.push_back(1);
 	}
-	if (collision->checkCollision(getX() - scale, getY())){
+	if (collision->checkCollision(getX() - scale, getY(), getEntityType())){
 		validMoves.push_back(2);
 	}
-	if (collision->checkCollision(getX(), getY() + scale))
-	{
+	if (collision->checkCollision(getX(), getY() + scale, getEntityType())){
 		validMoves.push_back(3);
 	}
-	if (collision->checkCollision(getX(), getY() - scale)){
+	if (collision->checkCollision(getX(), getY() - scale, getEntityType())){
 		validMoves.push_back(4);
 	}
 
 	srand(time(NULL));
-	int iSecret = static_cast<int>((rand() % 3) + 1) ;  // rand() %  validMoves.size() + 1;
-	std::cout << "RANDOM MOVE DIRECTION: " << iSecret << std::endl;
+	int iSecret = static_cast<int>((rand() % 4) + 1) ;  // rand() %  validMoves.size() + 1;
+	// std::cout << "RANDOM MOVE DIRECTION: " << iSecret << std::endl;
 	mDirection = iSecret;
 
 
@@ -263,42 +269,57 @@ void	Enemy::moveEnemy(){
 		DeltaTime = 1.0f/frameRate;
 	}
 	float scale = DeltaTime * 100000.0f;
+	if (scale > m_world->getScale()){
+		return;
+	}
 
 	if (mDirection != 0){
-		std::cout << "moving ENEMY in DIRECTION: " << mDirection << std::endl;
 		switch (mDirection){
 			case 1:
-				if (!collision->checkCollision(getX() + scale, getY())){
+				if (!collision->checkCollision(getX() + scale, getY(), getEntityType())){
 					mDirection = 0;
 					break;
 				}
-				setX(getX() + scale);
+				if (timer->checkTimer(0.05f)){
+					setX(getX() + scale);
+					timer->Reset();
+				}
 				break;
 			case 2:
-				if (!collision->checkCollision(getX() - scale, getY())){
+				if (!collision->checkCollision(getX() - scale, getY(), getEntityType())){
 					mDirection = 0;
 					break;
 				}
-				setX(getX() - scale);
+				if (timer->checkTimer(0.05f)){
+					setX(getX() - scale);
+					timer->Reset();
+				}
 				break;
 			case 3:
-				if (!collision->checkCollision(getX(), getY() + scale)){
+				if (!collision->checkCollision(getX(), getY() + scale, getEntityType())){
 					mDirection = 0;
 					break;
 				}
-				setY(getY() + scale);
+				if (timer->checkTimer(0.05f)){
+					setY(getY() + scale);
+					timer->Reset();
+				}
+			
 				break;
 			case 4:
-				if (!collision->checkCollision(getX(), getY() - scale)){
+				if (!collision->checkCollision(getX(), getY() - scale, getEntityType())){
 					mDirection = 0;
 					break;
 				}
-				setY(getY() - scale);
+				if (timer->checkTimer(0.05f)){
+					setY(getY() - scale);
+					timer->Reset();
+				}
 				break;
 		}
 	}
 	else {
-		if (timer->checkTimer(1.0f)){
+		if (timer->checkTimer(0.1f)){
 			newDirection();
 			timer->Reset();
 		}

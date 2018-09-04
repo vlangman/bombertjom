@@ -123,6 +123,10 @@ double  CollisionComponent::getY(){
 }
 
 bool	withinSquare(double p_x, double p_y, double w_x, double w_y, double scale){
+	float softness = scale/15;
+	scale -= softness;
+
+	p_y = p_y - softness;
 
 	if (p_x == w_x && p_y < w_y + scale && w_y < p_y){
 		// std::cout << "top side collision" << std::endl;
@@ -167,15 +171,17 @@ bool	withinSquare(double p_x, double p_y, double w_x, double w_y, double scale){
 }
 
 
-bool CollisionComponent::checkCollision(double x, double y){
+bool CollisionComponent::checkCollision(double x, double y, E_ENTITY_TYPE type){
 	
 	Game * m_game = m_owner->getWorld();
 	double scale = m_game->getScale();
 
 	for (auto i: m_game->colliderList)
 	{
-		if (withinSquare(x, y, i->getX(), i->getY(), scale)){
-			return false;
+		if (i->getOwner()->getEntityType() != type){
+			if (withinSquare(x, y, i->getX(), i->getY(), scale)){
+				return false;
+			}
 		}
 	}
 	return true;

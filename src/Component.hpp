@@ -1,5 +1,6 @@
 #pragma once
 #include "game.hpp"
+#include "Entity.hpp"
 
 
 class Entity;
@@ -54,11 +55,12 @@ public:
 class CollisionComponent : public Component 
 {
 private:
-	
+
 public:
+
 	CollisionComponent(Entity *owner);
 	void	update();
-	bool	checkCollision(double x, double y);
+	bool	checkCollision(double x, double y, E_ENTITY_TYPE type);
 	double	getX(void);
 	double	getY(void);
 };
