@@ -123,10 +123,9 @@ double  CollisionComponent::getY(){
 }
 
 bool	withinSquare(double p_x, double p_y, double w_x, double w_y, double scale){
-	float softness = scale/15;
+	float softness = scale/5.0f;
 	scale -= softness;
-
-	p_y = p_y - softness;
+	// p_y = p_y - softness;
 
 	if (p_x == w_x && p_y < w_y + scale && w_y < p_y){
 		// std::cout << "top side collision" << std::endl;
