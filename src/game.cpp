@@ -120,6 +120,7 @@ int 	Game::runLoop(void)
 	float renderTime = 0;
 	float frameCount = 0.0f;
 	float sumTimes = 0.0f;
+	float engineTick = 0.0f;
 	int		dropcounter = 0;
 
 	m_Timer->update();
@@ -128,39 +129,37 @@ int 	Game::runLoop(void)
 		m_Timer->update();
 		Delta = m_Timer->DeltaTime();
 		renderTime = Delta;
-		timeStep += Delta;
+		// timeStep += Delta;
 
 
 		if (renderTime < 1.0f/frameRate){
 			dropcounter--;
-			std::cout << "\033[0;32m";
+			// std::cout << "\033[0;32m";
 			if (dropcounter == -frameRate && frameRate <= 120){
-				frameRate+=1.0f;
+				frameRate+=2.0f;
 				dropcounter = 0;
 			}
 			
 		}
 		//catch up by dropping the frame rate to compensate for long render times
 		else{
-			std::cout << "\033[0;31m";
+			// std::cout << "\033[0;31m";
 			dropcounter++;
 			if (dropcounter > frameRate)
 				dropcounter -= frameRate/2;
 			frameRate -= 2.0f;
 		}
-		
-		
-		
-		std::cout << "[FPS: " <<frameRate <<"]" << renderTime << " / " << 1.0f/frameRate << std::endl;
-		std::cout << "\033[0m";
+		// std::cout << "[FPS: " <<frameRate <<"]" << renderTime << " / " << 1.0f/frameRate << std::endl;
+		// std::cout << " /033[0m";
 
 
 		while(timeStep < (1.0f/frameRate)){
 			//update timer sets start time to now
+			stepGame(Delta);
+			timeStep += Delta;
 			m_Timer->update();
 			Delta = m_Timer->DeltaTime();
-			timeStep += Delta;
-			stepGame(Delta);
+			engineTick++;
 		}
 		m_Timer->Reset();
 		//reset timer so we can include how long render takes
@@ -173,12 +172,15 @@ int 	Game::runLoop(void)
 
 		// float FPS = 1.0f/timeStep;
 		sumTimes += timeStep;
-		// if (sumTimes >= 1.0f){
-		// 	float FPS = frameCount/sumTimes;
-		// 	sdl.drawFps(FPS);
-		// 	sumTimes = 0;
-		// 	frameCount = 0;
-		// }
+		if (sumTimes >= 1.0f){
+			float FPS = frameCount/sumTimes;
+			float tick = engineTick/sumTimes;
+
+			std::cout << FPS <<"/" << tick << std::endl;
+			sumTimes = 0;
+			frameCount = 0;
+			engineTick = 0;
+		}
 		timeStep = 0;
 		frameCount++;
 	}
@@ -222,6 +224,8 @@ void	Game::addEntity(Entity *entity)
 	}
 	else if (entity->getEntityType() == E_ENTITY_TYPE::ET_BOMB){
 		renderList.push_back(dynamic_cast<Bomb*>(entity)->graphics);
+		colliderList.push_back(dynamic_cast<Bomb*>(entity)->collision);
+
 	}
 	else if (entity->getEntityType() == E_ENTITY_TYPE::ET_ENEMY){
 		renderList.push_back(dynamic_cast<Enemy*>(entity)->graphics);
@@ -314,4 +318,9 @@ double Game::getScale(void) const{
 
 float	Game::getFrameRate(void) const{
 	return frameRate;
+}
+
+int		Game::newEntity(void){
+		entityCount++;
+		return entityCount;
 }

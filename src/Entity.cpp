@@ -33,42 +33,46 @@ void    Player::setDirection(int vertical, int horizontal){
 
 void	Player::movePlayer(float DeltaTime){
 	float frameRate = m_world->getFrameRate();
-	if (DeltaTime > 1.0f/frameRate){
-		DeltaTime = 1.0f/frameRate;
-	}
-	float scale = DeltaTime * 100000.0f;
+	float velocity = m_world->getScale()* m_world->getScale();
+	// std::cout << "Velocity: " << velocity << std::endl;
+	float distance = velocity * 1.0f/frameRate;
+	// std::cout << "SCALE: " <<  1.0f - DeltaTime<< std::endl;
+	// std::cout << "DISTANCE: " << distance  << std::endl;
+	
+	// float distance = velocity * DeltaTime;
+	// float scale = DeltaTime * 100000.0f/m_world->getScale() * 3;
 	//maybe check if next move is greater that game get scale
-	if (scale > m_world->getScale()){
-		// std::cout << "HUGE SCALING " << scale << std::endl;
-		scale =  m_world->getScale() - 1.0f;
-		// exit(1);
-	}
+	// if (scale > m_world->getScale()){
+	// 	std::cout << "HUGE SCALING " << scale << std::endl;
+	// 	scale =  m_world->getScale() - 1.0f;
+	// 	// exit(1);
+	// }
 
 
 	if (east){
 		// std::cout << "RIGHT" << std::endl;
-		if (collision->checkCollision(getX() + scale, getY(), getEntityType())){
-			setX(getX() + scale);
+		if (collision->checkCollision(getX() + distance, getY(), ET_BOMB)){
+			setX(getX() + distance);
 		}
 		
 	}
 	if (west){
 		// std::cout << "LEFT" << std::endl;
-		if (collision->checkCollision(getX() - scale, getY(), getEntityType())){
-			setX(getX() - scale);
+		if (collision->checkCollision(getX() - distance, getY(), ET_BOMB)){
+			setX(getX() - distance);
 		}
 	}
 	if (south){
 		// std::cout << "DOWN" << std::endl;
-		if (collision->checkCollision(getX(), getY() + scale, getEntityType()))
+		if (collision->checkCollision(getX(), getY() + distance, ET_BOMB))
 		{
-			setY(getY() + scale);
+			setY(getY() + distance);
 		}
 	}
 	if (north){
 		// std::cout << "UP" << std::endl;
-		if (collision->checkCollision(getX(), getY() - scale, getEntityType())){
-			setY(getY() - scale);
+		if (collision->checkCollision(getX(), getY() - distance, ET_BOMB)){
+			setY(getY() - distance);
 		}
 	}
 	return;
@@ -112,6 +116,7 @@ Entity::Entity(Game *world)
 	m_world = world;
 	mType = ET_NONE;
 	mIsAlive = true;
+	id = world->newEntity();
 }
 
 bool Entity::isAlive(void){
@@ -159,6 +164,10 @@ void Entity::setHeight(float _height){
 
 Game *Entity::getWorld(){
 	return m_world;
+}
+
+int	Entity::getId(void){
+	return id;
 }
 
 // ============================== BOMB ================================ //
@@ -238,17 +247,16 @@ void Enemy::newDirection(void){
 	if (scale > m_world->getScale()){
 		scale =  m_world->getScale() - 1.0f;
 	}
-
-	if (collision->checkCollision(getX() + scale, getY(), getEntityType())){
+	if (collision->checkCollision(getX() + scale, getY(), ET_NONE)){
 		validMoves.push_back(1);
 	}
-	if (collision->checkCollision(getX() - scale, getY(), getEntityType())){
+	if (collision->checkCollision(getX() - scale, getY(), ET_NONE)){
 		validMoves.push_back(2);
 	}
-	if (collision->checkCollision(getX(), getY() + scale, getEntityType())){
+	if (collision->checkCollision(getX(), getY() + scale, ET_NONE)){
 		validMoves.push_back(3);
 	}
-	if (collision->checkCollision(getX(), getY() - scale, getEntityType())){
+	if (collision->checkCollision(getX(), getY() - scale, ET_NONE)){
 		validMoves.push_back(4);
 	}
 
@@ -269,15 +277,12 @@ void	Enemy::moveEnemy(){
 	if (DeltaTime > 1.0f/frameRate){
 		DeltaTime = 1.0f/frameRate;
 	}
-	float scale = DeltaTime * 100000.0f;
-	if (scale > m_world->getScale()){
-		scale =  m_world->getScale() - 1.0f;
-	}
+	float scale = 0.05 * 100.0f;
 
 	if (mDirection != 0){
 		switch (mDirection){
 			case 1:
-				if (!collision->checkCollision(getX() + scale, getY(), getEntityType())){
+				if (!collision->checkCollision(getX() + scale, getY(), ET_NONE)){
 					mDirection = 0;
 					break;
 				}
@@ -287,7 +292,7 @@ void	Enemy::moveEnemy(){
 				}
 				break;
 			case 2:
-				if (!collision->checkCollision(getX() - scale, getY(), getEntityType())){
+				if (!collision->checkCollision(getX() - scale, getY(), ET_NONE)){
 					mDirection = 0;
 					break;
 				}
@@ -297,7 +302,7 @@ void	Enemy::moveEnemy(){
 				}
 				break;
 			case 3:
-				if (!collision->checkCollision(getX(), getY() + scale, getEntityType())){
+				if (!collision->checkCollision(getX(), getY() + scale, ET_NONE)){
 					mDirection = 0;
 					break;
 				}
@@ -308,7 +313,7 @@ void	Enemy::moveEnemy(){
 			
 				break;
 			case 4:
-				if (!collision->checkCollision(getX(), getY() - scale, getEntityType())){
+				if (!collision->checkCollision(getX(), getY() - scale, ET_NONE)){
 					mDirection = 0;
 					break;
 				}

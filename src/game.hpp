@@ -27,6 +27,7 @@ class Game
 		GameWorld 		gameWorld;
 		Entity 			*m_Player;
 		double			scale;
+		int				entityCount;
 
 	public:
 		std::vector<Entity*> entityList;
@@ -45,6 +46,8 @@ class Game
 		int getWindowY(void) const;
 		int getVerbose(void) const;
 		double	getScale(void) const;
+		int		newEntity(void);
+		float	getFrameRate(void) const;
 
 		//game loop functions
 		int 	runLoop(void);
@@ -53,15 +56,13 @@ class Game
 		void	closeGame(void);
 		void	stepGame(float DeltaTime);
 		void	cleanUp(void);
-		
-		
-		// void	cleanup();
 
 		//utility
 		void	log(std::string message);
 		float	getDeltaTime(void);
 		void	buildGameObjects(void);
 		void	addEntity(Entity *entity);
-		float	getFrameRate(void) const;
+		
+		
 
 };

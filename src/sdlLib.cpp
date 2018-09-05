@@ -87,10 +87,10 @@ E_EVENT SdlLib::handleEvents()
 			}
 		}
 		else if (event.type == SDL_KEYUP){
-			return E_EVENT::EVENT_NONE;
+			// return E_EVENT::EVENT_NONE;
 		}
 	}
-	return E_EVENT::EVENT_NONE;
+	// return E_EVENT::EVENT_NONE;
 
 }
 

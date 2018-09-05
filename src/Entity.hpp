@@ -31,6 +31,7 @@ protected:
 	E_ENTITY_TYPE mType;
 	Game *m_world;
 	bool	mIsAlive;
+	int		id;
 
 public:
 	Entity(void);
@@ -51,6 +52,7 @@ public:
 	float getWidth(void) const;
 	float getHeight(void) const;
 	bool  isAlive(void);
+	int		getId(void);
 
 	Game *getWorld();
 

@@ -77,6 +77,9 @@ void PlayerInputComponent::handleInput(E_EVENT event)
 	if (event == E_EVENT::EVENT_NONE){
 		player->setDirection(0,0);
 	}
+	
+	
+
 }
 
 
@@ -177,11 +180,14 @@ bool CollisionComponent::checkCollision(double x, double y, E_ENTITY_TYPE type){
 
 	for (auto i: m_game->colliderList)
 	{
-		if (i->getOwner()->getEntityType() != type){
-			if (withinSquare(x, y, i->getX(), i->getY(), scale)){
-				return false;
+		if (i->getOwner()->getId() != getOwner()->getId()){
+			if (i->getOwner()->getEntityType() != type){
+				if (withinSquare(x, y, i->getX(), i->getY(), scale)){
+					return false;
+				}
 			}
 		}
+		
 	}
 	return true;
 }
