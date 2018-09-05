@@ -131,28 +131,28 @@ int 	Game::runLoop(void)
 		timeStep += Delta;
 
 
-		// if (renderTime < 1.0f/frameRate){
-		// 	std::cout << "\033[0;32m";
-		// 	if (dropcounter > 5 && frameRate <= 120){
-		// 		frameRate+=0.1f;
-		// 	}
-		// 	dropcounter--;
-		// }
-		// //catch up by dropping the frame rate to compensate for long render times
-		// else{
-		// 	if (dropcounter > 5){
-		// 		frameRate-=0.1f;
-		// 		dropcounter = 0;
-		// 	}
-		// 	else{
-		// 		std::cout << "\033[0;31m";
-		// 		dropcounter++;
-		// 	}
+		if (renderTime < 1.0f/frameRate){
+			dropcounter--;
+			std::cout << "\033[0;32m";
+			if (dropcounter == -frameRate && frameRate <= 120){
+				frameRate+=1.0f;
+				dropcounter = 0;
+			}
+			
+		}
+		//catch up by dropping the frame rate to compensate for long render times
+		else{
+			std::cout << "\033[0;31m";
+			dropcounter++;
+			if (dropcounter > frameRate)
+				dropcounter -= frameRate/2;
+			frameRate -= 2.0f;
+		}
 		
 		
 		
-		// std::cout << "[FPS: " <<frameRate <<"]" << renderTime << " / " << 1.0f/frameRate << std::endl;
-		// std::cout << "\033[0m";
+		std::cout << "[FPS: " <<frameRate <<"]" << renderTime << " / " << 1.0f/frameRate << std::endl;
+		std::cout << "\033[0m";
 
 
 		while(timeStep < (1.0f/frameRate)){
