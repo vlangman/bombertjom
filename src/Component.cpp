@@ -75,7 +75,7 @@ void PlayerInputComponent::handleInput(E_EVENT event)
 		player->placeBomb();
 	}
 	if (event == E_EVENT::EVENT_NONE){
-		player->setDirection(0,0);
+		// player->setDirection(0,0);
 	}
 	
 	

@@ -33,11 +33,10 @@ void    Player::setDirection(int vertical, int horizontal){
 
 void	Player::movePlayer(float DeltaTime){
 	float frameRate = m_world->getFrameRate();
-	float velocity = m_world->getScale()* m_world->getScale();
+	float velocity = 5.0f * m_world->getScale();
 	// std::cout << "Velocity: " << velocity << std::endl;
-	float distance = velocity * 1.0f/frameRate;
+	float distance = velocity * DeltaTime;
 	// std::cout << "SCALE: " <<  1.0f - DeltaTime<< std::endl;
-	// std::cout << "DISTANCE: " << distance  << std::endl;
 	
 	// float distance = velocity * DeltaTime;
 	// float scale = DeltaTime * 100000.0f/m_world->getScale() * 3;

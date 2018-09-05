@@ -122,6 +122,7 @@ int 	Game::runLoop(void)
 	float sumTimes = 0.0f;
 	float engineTick = 0.0f;
 	int		dropcounter = 0;
+	int 	last = 0;
 
 	m_Timer->update();
 	while (m_shouldRun)
@@ -135,8 +136,9 @@ int 	Game::runLoop(void)
 		if (renderTime < 1.0f/frameRate){
 			dropcounter--;
 			// std::cout << "\033[0;32m";
-			if (dropcounter == -frameRate && frameRate <= 120){
-				frameRate+=2.0f;
+			if (dropcounter == -frameRate && frameRate <= 1000){
+				last+=2;
+				frameRate+=2.0f + last;
 				dropcounter = 0;
 			}
 			
@@ -148,6 +150,7 @@ int 	Game::runLoop(void)
 			if (dropcounter > frameRate)
 				dropcounter -= frameRate/2;
 			frameRate -= 2.0f;
+			last = 0;
 		}
 		// std::cout << "[FPS: " <<frameRate <<"]" << renderTime << " / " << 1.0f/frameRate << std::endl;
 		// std::cout << " /033[0m";
@@ -197,7 +200,7 @@ void 	Game::init(int _verbose, int width, int height, bool fullscreen){
 	this->sdl.init(width, height, this->verbose);
 	this->m_shouldRun = true;
 	//instantiates the game world
-	this->gameWorld.init("test2.map");
+	this->gameWorld.init("dank.map");
 
 	//use instance to create and reset timer
 	m_Timer = Timer::Instance();
