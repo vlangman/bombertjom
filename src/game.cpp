@@ -120,6 +120,7 @@ int 	Game::runLoop(void)
 	float renderTime = 0;
 	float frameCount = 0.0f;
 	float sumTimes = 0.0f;
+	int		dropcounter = 0;
 
 	m_Timer->update();
 	while (m_shouldRun)
@@ -130,23 +131,34 @@ int 	Game::runLoop(void)
 		timeStep += Delta;
 
 
-		if (renderTime < 1.0f/frameRate){
-			std::cout << "\033[0;32m";
-			frameRate+=0.1f;
-		}
-		//catch up by dropping the frame rate to compensate for long render times
-		else{
-			frameRate-=0.1f;
-			// frameRate = 1.0f/renderTime;
-			std::cout << "\033[0;31m";
-		}
+		// if (renderTime < 1.0f/frameRate){
+		// 	std::cout << "\033[0;32m";
+		// 	if (dropcounter > 5 && frameRate <= 120){
+		// 		frameRate+=0.1f;
+		// 	}
+		// 	dropcounter--;
+		// }
+		// //catch up by dropping the frame rate to compensate for long render times
+		// else{
+		// 	if (dropcounter > 5){
+		// 		frameRate-=0.1f;
+		// 		dropcounter = 0;
+		// 	}
+		// 	else{
+		// 		std::cout << "\033[0;31m";
+		// 		dropcounter++;
+		// 	}
 		
-		std::cout << "[FPS: " <<frameRate <<"]" << renderTime << " / " << 1.0f/frameRate << std::endl;
-		std::cout << "\033[0m";		
+		
+		
+		// std::cout << "[FPS: " <<frameRate <<"]" << renderTime << " / " << 1.0f/frameRate << std::endl;
+		// std::cout << "\033[0m";
+
+
 		while(timeStep < (1.0f/frameRate)){
-			Delta = m_Timer->DeltaTime();
 			//update timer sets start time to now
 			m_Timer->update();
+			Delta = m_Timer->DeltaTime();
 			timeStep += Delta;
 			stepGame(Delta);
 		}

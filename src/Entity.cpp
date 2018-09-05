@@ -39,7 +39,9 @@ void	Player::movePlayer(float DeltaTime){
 	float scale = DeltaTime * 100000.0f;
 	//maybe check if next move is greater that game get scale
 	if (scale > m_world->getScale()){
+		// std::cout << "HUGE SCALING " << scale << std::endl;
 		scale =  m_world->getScale() - 1.0f;
+		// exit(1);
 	}
 
 
@@ -81,7 +83,6 @@ void	Player::placeBomb(void){
 
 	return;
 }
-
 
 // =============================== WALL =============================== //
 void Wall::update() 
@@ -235,7 +236,7 @@ void Enemy::newDirection(void){
 
 	float scale = DeltaTime * 100000.0f;
 	if (scale > m_world->getScale()){
-		return;
+		scale =  m_world->getScale() - 1.0f;
 	}
 
 	if (collision->checkCollision(getX() + scale, getY(), getEntityType())){
@@ -270,7 +271,7 @@ void	Enemy::moveEnemy(){
 	}
 	float scale = DeltaTime * 100000.0f;
 	if (scale > m_world->getScale()){
-		return;
+		scale =  m_world->getScale() - 1.0f;
 	}
 
 	if (mDirection != 0){
@@ -319,7 +320,7 @@ void	Enemy::moveEnemy(){
 		}
 	}
 	else {
-		if (timer->checkTimer(0.5f)){
+		if (timer->checkTimer(0.2f)){
 			newDirection();
 			timer->Reset();
 		}
