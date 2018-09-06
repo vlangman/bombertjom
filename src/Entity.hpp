@@ -19,7 +19,8 @@ enum E_ENTITY_TYPE
 	ET_WALL,
 	ET_BOMB,
 	ET_ENEMY,
-	ET_NONE
+	ET_IWALL,
+	ET_NONE,
 };
 
 class Entity
@@ -30,8 +31,9 @@ protected:
 	double mWidth;
 	double mHeight;
 	E_ENTITY_TYPE mType;
-	Game *m_world;
+	Game	*m_world;
 	bool	mIsAlive;
+	bool	mIsDestroyable;
 	int		id;
 
 public:
@@ -41,8 +43,11 @@ public:
 	virtual void update() = 0;
 	virtual ~Entity() = 0;
 	
+	int    getId(void);
 	double getX();
 	double getY();
+	bool   isDestroyable(void);
+	bool   isAlive(void);
 
 	void setX(double x);
 	void setY(double y);
@@ -53,11 +58,8 @@ public:
 
 	float getWidth(void) const;
 	float getHeight(void) const;
-	bool  isAlive(void);
-	int		getId(void);
 
 	Game *getWorld();
-
 	E_ENTITY_TYPE getEntityType();
 };
 
@@ -68,6 +70,7 @@ private:
 	bool	south;
 	bool	west;
 	bool	east;
+	int 	lives;
 public: 
 	Player(Game *world);
 
@@ -80,16 +83,18 @@ public:
 	void	setDirection(int vertical, int horizontal);
 	void	movePlayer(float DeltaTime);
 	void	placeBomb(void);
+	void	killPlayer(void);
 };
 
 class Wall : public Entity 
 {
 private: 
 public:
-	Wall(Game *world);
+	Wall(Game *world, bool canDestroy);
 	GraphicsComponent *graphics;
 	CollisionComponent *collision;
 	void update();
+	void playerStartBlock(void);
 };
 
 
@@ -136,4 +141,20 @@ public:
 
 	void newDirection(void);
 	void moveEnemy(void);
+};
+
+
+class PowerUp : public Entity
+{
+public:
+	GraphicsComponent *graphics;
+	CollisionComponent *collision;
+
+	PowerUp(void);
+	~PowerUp(void);
+
+	PowerUp(Game *world);
+	
+	void update(void);
+	void activatePowerUp(void);
 };

@@ -28,12 +28,14 @@ class Game
 		Entity 			*m_Player;
 		double			scale;
 		int				entityCount;
+		float 			pStartX;
+		float 			pStartY;
 
 	public:
-		std::vector<Entity*> entityList;
-		std::vector<PlayerInputComponent*> inputHandlers;
-		std::vector<GraphicsComponent*> renderList;
-		std::vector<CollisionComponent*> colliderList;
+		std::vector<Entity*> 				entityList;
+		std::vector<PlayerInputComponent*>	inputHandlers;
+		std::vector<GraphicsComponent*>		renderList;
+		std::vector<CollisionComponent*>	colliderList;
 
 		//canonical constructors
 		Game(void);
@@ -62,7 +64,8 @@ class Game
 		float	getDeltaTime(void);
 		void	buildGameObjects(void);
 		void	addEntity(Entity *entity);
-		
-		
+		float 	getPlayerStartX(void);
+		float 	getPlayerStartY(void);
+
 
 };

@@ -66,6 +66,7 @@ public:
 	double	getY(void);
 	void	kill(void);
 	bool 	isAlive(void);
+	bool 	isDestroyable(void);
 };
 
 

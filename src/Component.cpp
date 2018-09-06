@@ -126,10 +126,9 @@ double  CollisionComponent::getY(){
 }
 
 bool	withinSquare(double p_x, double p_y, double w_x, double w_y, double scale){
-	float softness = scale/30;
+	float softness = scale/20;
 	scale -= softness;
 	// p_y = p_y - softness;
-
 	//directly on top of eachother
 	if (p_x == w_x && p_y == w_y){
 		return true;
@@ -178,24 +177,33 @@ bool	withinSquare(double p_x, double p_y, double w_x, double w_y, double scale){
 }
 
 
-bool CollisionComponent::checkCollision(double x, double y, E_ENTITY_TYPE type){
-	
+bool CollisionComponent::checkCollision(double x, double y, E_ENTITY_TYPE type) {
+
 	Game * m_game = m_owner->getWorld();
 	double scale = m_game->getScale();
+	E_ENTITY_TYPE ownerType = getOwner()->getEntityType();
 
-	for (auto i: m_game->colliderList)
-	{
+	for (auto i: m_game->colliderList){
+		if (ownerType == ET_PLAYER && i->getOwner()->getEntityType() == ET_IWALL){
+			continue;
+		}
 		if (i->isAlive()){
 			if (i->getOwner()->getId() != getOwner()->getId()){
 				if (i->getOwner()->getEntityType() != type){
 					if (withinSquare(x, y, i->getX(), i->getY(), scale)){
+						if (i->getOwner()->getEntityType() == ET_ENEMY && ownerType == ET_PLAYER){
+							Player * player = dynamic_cast<Player*>(getOwner());
+							player->killPlayer();
+						}
+						if (i->getOwner()->getEntityType() == ET_PLAYER && ownerType == ET_ENEMY){
+							Player * player = dynamic_cast<Player*>(i->getOwner());
+							player->killPlayer();
+						}
 						return false;
 					}
 				}
 			}
 		}
-	
-		
 	}
 	return true;
 }
@@ -208,8 +216,7 @@ void	CollisionComponent::lethalCollision(double x, double y, E_ENTITY_TYPE type)
 
 	for (auto i: m_game->colliderList)
 	{
-		
-		if (i->getOwner()->getId() != getOwner()->getId()){
+		if (i->getOwner()->getId() != getOwner()->getId() && i->isDestroyable()){
 			if (i->getOwner()->getEntityType() != type){
 				if (withinSquare(x, y, i->getX(), i->getY(), scale)){
 					i->kill();
@@ -222,6 +229,10 @@ void	CollisionComponent::lethalCollision(double x, double y, E_ENTITY_TYPE type)
 
 void	CollisionComponent::kill(){
 	m_owner->kill();
+}
+
+bool CollisionComponent::isDestroyable(void){
+	return m_owner->isDestroyable();
 }
 
 bool	CollisionComponent::isAlive(){

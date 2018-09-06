@@ -53,49 +53,60 @@ void	Game::buildGameObjects(void){
 	double		increment_x =  static_cast<double>(this->window_x) / map.size();
 	this->scale = increment_y;
 
-	
 	// read map from gameworld into game entities
 	 for (unsigned int x = 0; x < map.size(); x++) {
-		for (unsigned int y = 0; y < map[x].size(); y++)
-		{
+		for (unsigned int y = 0; y < map[x].size(); y++) {
 			//if the number read is a 1 (ascii 49)
-			if (map[x][y] == 49)
-			{
-				Entity *wall = builder.createWall(x*increment_x,y*increment_y,increment_x, increment_y);
+			if (map[x][y] == 49) {
+				Entity *wall = builder.createWall(x*increment_x,y*increment_y,increment_x, increment_y, false);
 				addEntity(wall);
 			}
-			//if the number read is a 2 (ascii 50)
-
-			if (map[x][y] == 50)
-			{
+			//if the number read is 2
+			if (map[x][y] == 50) {
+				Entity *wall = builder.createWall(x*increment_x,y*increment_y,increment_x, increment_y, true);
+				addEntity(wall);
+			}
+			//if the number read is 3
+			if (map[x][y] == 51) {
 				Entity *enemy = builder.createEnemy(x*increment_x,y*increment_y,increment_x, increment_y);
 				addEntity(enemy);
 			}
+			//if the number read is 4
+			if (map[x][y] == 52) {
+				Entity *player = builder.createPlayer(x*increment_x, y*increment_y,  increment_x,  increment_y);
+				Entity *wall = builder.createStartBlock(x*increment_x,y*increment_y,increment_x, increment_y);
+				addEntity(wall);
+				pStartX = x*increment_x;
+				pStartY = y*increment_y;
+				addEntity(player);
+				this->m_Player = player;
+			}
 		}
 	}
+	
+	
 
-	// Add the player
-	Entity *player = builder.createPlayer( increment_x,  increment_y,  increment_x,  increment_y);
-	addEntity(player);
-	this->m_Player = player;
+
 }
 
 //game loop functions
 
 void	Game::stepGame(float DeltaTime){
 	//calulate and draw
+
 	E_EVENT event = sdl.handleEvents();
 	if (event == E_EVENT::EVENT_CLOSE_WINDOW){
 		m_shouldRun = false;
 	}
+			
 
 	for (auto i: inputHandlers)
 	{
 		i->handleInput(event);
 	}
-
 	for (auto i: entityList){
 		if (i->getEntityType() == E_ENTITY_TYPE::ET_BOMB){
+
 			i->update();
 		}
 		else if (i->getEntityType() == E_ENTITY_TYPE::ET_ENEMY){
@@ -112,16 +123,15 @@ void	Game::stepGame(float DeltaTime){
 
 int 	Game::runLoop(void)
 {
-
-	buildGameObjects();
 	m_Timer->Reset();
-	float timeStep = 0.0f;
-	float Delta = 0.0f;
-	float renderTime = 0;
-	float frameCount = 0.0f;
-	float sumTimes = 0.0f;
-	float engineTick = 0.0f;
-	int		dropcounter = 0;
+
+	float 	timeStep = 0.0f;
+	float 	Delta = 0.0f;
+	float 	renderTime = 0;
+	float 	frameCount = 0.0f;
+	float 	sumTimes = 0.0f;
+	float 	engineTick = 0.0f;
+	int 	dropcounter = 0;
 	int 	last = 0;
 
 	m_Timer->update();
@@ -152,7 +162,6 @@ int 	Game::runLoop(void)
 		// std::cout << "[FPS: " <<frameRate <<"]" << renderTime << " / " << 1.0f/frameRate << std::endl;
 		// std::cout << "\033[0m";
 
-
 		while(timeStep < (1.0f/frameRate)){
 			//update timer sets start time to now
 			stepGame(Delta);
@@ -170,7 +179,6 @@ int 	Game::runLoop(void)
 		}
 		sdl.displayScreen();
 		sumTimes += timeStep;
-	
 		timeStep = 0;
 		frameCount++;
 	}
@@ -189,7 +197,7 @@ void 	Game::init(int _verbose, int width, int height, bool fullscreen){
 	//instantiates the game world
 
 	this->gameWorld.init("dank.map");
-
+	buildGameObjects();
 	//use instance to create and reset timer
 	m_Timer = Timer::Instance();
 	return;
@@ -221,6 +229,10 @@ void	Game::addEntity(Entity *entity)
 	else if (entity->getEntityType() == E_ENTITY_TYPE::ET_ENEMY){
 		renderList.push_back(dynamic_cast<Enemy*>(entity)->graphics);
 		colliderList.push_back(dynamic_cast<Enemy*>(entity)->collision);
+	}
+	else if (entity->getEntityType() == E_ENTITY_TYPE::ET_IWALL){
+		renderList.push_back(dynamic_cast<Wall*>(entity)->graphics);
+		colliderList.push_back(dynamic_cast<Wall*>(entity)->collision);
 	}
 }
 
@@ -316,3 +328,12 @@ int		Game::newEntity(void){
 		entityCount++;
 		return entityCount;
 }
+
+float		Game::getPlayerStartX(void){
+		return pStartX;
+}
+
+float		Game::getPlayerStartY(void){
+		return pStartY;
+}
+

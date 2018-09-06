@@ -10,6 +10,7 @@ void Player::update()
 Player::Player(Game *world)
 :Entity(world)
 {
+	lives = 3;
 	mType = ET_PLAYER;
 }
 
@@ -70,15 +71,8 @@ void	Player::placeBomb(void){
 	double scale = static_cast<double>(m_world->getScale());
 	double x = getX()/scale;
 	double y = getY()/scale;
-
-	std::cout << "Player X: " << getX() << " Player Y: " << getY() << std::endl;
-	
-
-	int Mx = nearbyint(x) * scale;
-	int My = nearbyint(y) * scale;
-	std::cout << "rounded X: " << Mx << " rounded Y: " << My << std::endl;
-
-	std::cout << "bomb X: " << Mx* scale << " bomb Y: " << My*scale << std::endl;
+	double Mx = static_cast<double>(nearbyint(x) * scale);
+	double My = static_cast<double>(nearbyint(y) * scale);
 	Builder * builder = new Builder(m_world);
 	builder->createBomb(Mx,My, m_world->getScale(), m_world->getScale());
 	delete builder;
@@ -86,16 +80,33 @@ void	Player::placeBomb(void){
 	return;
 }
 
+
+void 	Player::killPlayer(void){
+	if (lives == 0) {
+		std::cout << "GAME OVER!" << std::endl;
+	}
+	lives--;
+	setX(m_world->getPlayerStartX());
+	setY(m_world->getPlayerStartY());
+	setDirection(0,0);
+}
+
+
 // =============================== WALL =============================== //
 void Wall::update() 
 {
 
 }
 
-Wall::Wall(Game *world)
+Wall::Wall(Game *world, bool canDestroy)
 :Entity(world)
 {
+	mIsDestroyable = canDestroy;
 	mType = ET_WALL;
+}
+
+void Wall::playerStartBlock(void){
+	mType = ET_IWALL;
 }
 
 // ============================== ENTITY ================================ //
@@ -172,6 +183,10 @@ void Entity::kill(void){
 	mIsAlive = false;
 }
 
+bool Entity::isDestroyable(void){
+	return mIsDestroyable;
+}
+
 // ============================== BOMB ================================ //
 
 
@@ -198,6 +213,7 @@ Bomb & Bomb::operator=(const Bomb & _rhs){
 //usefull constructors
 Bomb::Bomb(Game *world, int raduis) : Entity(world)
 {
+	mIsDestroyable = true;
 	mRaduis = raduis;
 	mType = ET_BOMB;
 }
@@ -214,23 +230,30 @@ void	Bomb::update(void){
 }
 
 void   Bomb::detonate(void){
-	std::cout << "KABOOM!"<< std::endl;
+
 	float scale = m_world->getScale();
-	for (int i = mRaduis; i > 0; i--){
-		// bool	checkCollision(double x, double y, E_ENTITY_TYPE type);
+
+	bool north,east ,south, west;
+	east = west = south = north = true;
+
+	for (int i = 1; i <= mRaduis; i++){
 		double dist = static_cast<double>(i*scale);
-		//check up
-		// std::cout << "check above: "<< getX() << " Y: " << getY() - dist << std::endl;
-		collision->lethalCollision(getX(),getY()-dist, ET_BOMB);
-		// check down
-		// std::cout << "check below: "<< getX() << " Y: " << getY() + dist << std::endl;
-		collision->lethalCollision(getX(),getY()+dist, ET_BOMB);
-		// check left
-		// std::cout << "check left: "<< getX() - dist << " Y: " << getY() << std::endl;
-		collision->lethalCollision(getX() - dist,getY(), ET_BOMB);
-		// check right
-		// std::cout << "check right: "<< getX() + dist << " Y: " << getY() << std::endl;
-		collision->lethalCollision(getX() + dist,getY(), ET_BOMB);
+		if (north){
+			collision->lethalCollision(getX(),getY()-dist, ET_BOMB);
+			north = false;
+		}
+		if (south){
+			collision->lethalCollision(getX(),getY()+dist, ET_BOMB);
+			south = false;
+		}
+		if (east){
+			collision->lethalCollision(getX() - dist,getY(), ET_BOMB);
+			east = false;
+		}
+		if (west){
+			collision->lethalCollision(getX() + dist,getY(), ET_BOMB);
+			west = false;
+		}
 	}
 	mIsAlive = false;
 }
@@ -248,6 +271,7 @@ Enemy::~Enemy(void){
 Enemy::Enemy(Game * world)
 : Entity(world)
 {
+	mIsDestroyable = true;
 	mType = ET_ENEMY;
 	mDirection = 0;
 	return;
@@ -298,55 +322,40 @@ void Enemy::newDirection(void){
 
 void	Enemy::moveEnemy(){
 
-	float frameRate = m_world->getFrameRate();
 	float DeltaTime = m_world->getDeltaTime();
-	if (DeltaTime > 1.0f/frameRate){
-		DeltaTime = 1.0f/frameRate;
-	}
-	float scale = 0.05 * 100.0f;
+	float frameRate = m_world->getFrameRate();
+	float velocity = 3.0f * m_world->getScale();
+	float distance = velocity * DeltaTime;
 
 	if (mDirection != 0){
 		switch (mDirection){
 			case 1:
-				if (!collision->checkCollision(getX() + scale, getY(), ET_NONE)){
+				if (!collision->checkCollision(getX() + distance, getY(), ET_NONE)){
 					mDirection = 0;
 					break;
 				}
-				if (timer->checkTimer(0.05f)){
-					setX(getX() + scale);
-					timer->Reset();
-				}
+				setX(getX() + distance);
 				break;
 			case 2:
-				if (!collision->checkCollision(getX() - scale, getY(), ET_NONE)){
+				if (!collision->checkCollision(getX() - distance, getY(), ET_NONE)){
 					mDirection = 0;
 					break;
-				}
-				if (timer->checkTimer(0.05f)){
-					setX(getX() - scale);
-					timer->Reset();
-				}
+				}		
+				setX(getX() - distance);		
 				break;
 			case 3:
-				if (!collision->checkCollision(getX(), getY() + scale, ET_NONE)){
+				if (!collision->checkCollision(getX(), getY() + distance, ET_NONE)){
 					mDirection = 0;
 					break;
 				}
-				if (timer->checkTimer(0.05f)){
-					setY(getY() + scale);
-					timer->Reset();
-				}
-			
+				setY(getY() + distance);
 				break;
 			case 4:
-				if (!collision->checkCollision(getX(), getY() - scale, ET_NONE)){
+				if (!collision->checkCollision(getX(), getY() - distance, ET_NONE)){
 					mDirection = 0;
 					break;
 				}
-				if (timer->checkTimer(0.05f)){
-					setY(getY() - scale);
-					timer->Reset();
-				}
+				setY(getY() - distance);
 				break;
 		}
 	}
@@ -358,3 +367,29 @@ void	Enemy::moveEnemy(){
 		
 	}
 }
+
+
+// ============================== POWERUP ================================ //
+
+PowerUp::PowerUp(void){
+	return;
+};
+PowerUp::~PowerUp(void){
+	return;
+};
+
+PowerUp::PowerUp(Game *world)
+: Entity(world)
+{
+	mIsDestroyable = true;
+	return;
+};
+
+
+void PowerUp::update(void){
+
+};
+
+void PowerUp::activatePowerUp(void){
+
+};

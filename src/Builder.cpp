@@ -16,7 +16,7 @@ Entity *Builder::createPlayer(double x, double y, double width, double height)
 	// init input handler
 	player->inputHandler = new PlayerInputComponent(player);
 
-	std::cout << "COLLIDER INIT" << std::endl;
+	std::cout << "BUILT PLAYER" << std::endl;
 	player->collision = new CollisionComponent(player);
 
 	player->moveComponent = new MovementComponent(player);
@@ -26,18 +26,45 @@ Entity *Builder::createPlayer(double x, double y, double width, double height)
 	return player;
 }
 
-Entity *Builder::createWall(double x, double y, double width, double height)
+Entity *Builder::createWall(double x, double y, double width, double height, bool canDestroy)
 {
-	Wall *wall = new Wall(m_world);
+	Wall *wall = new Wall(m_world, canDestroy);
+
 
 	wall->setWidth(width);
 	wall->setHeight(height);
 	// init graphics component
-	wall->graphics = new GraphicsComponent(wall, E_COLOR::COLOR_GREY, width, height);
+	if (canDestroy)
+		wall->graphics = new GraphicsComponent(wall, E_COLOR::COLOR_GREY, width, height);
+	else
+		wall->graphics = new GraphicsComponent(wall, E_COLOR::COLOR_BLACK, width, height);
 	wall->collision = new CollisionComponent(wall);
 	wall->setPosition(x,y);
 	return wall;
 }
+
+
+
+Entity *Builder::createStartBlock(double x, double y, double width, double height)
+{
+	std::cout << "creating start block" << std::endl;
+
+	Wall *wall = new Wall(m_world, false);
+	wall->playerStartBlock();
+
+	wall->setWidth(width);
+	wall->setHeight(height);
+	// init graphics component
+
+	wall->graphics =  new GraphicsComponent(wall, E_COLOR::COLOR_PURPLE, width, height);
+
+	wall->collision = new CollisionComponent(wall);
+	wall->setPosition(x,y);
+
+	return wall;
+
+}
+
 
 Entity *Builder::createBomb(double x, double y, double width, double height){
 
