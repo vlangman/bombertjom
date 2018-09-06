@@ -126,9 +126,14 @@ double  CollisionComponent::getY(){
 }
 
 bool	withinSquare(double p_x, double p_y, double w_x, double w_y, double scale){
-	float softness = scale/5.0f;
+	float softness = scale/30;
 	scale -= softness;
 	// p_y = p_y - softness;
+
+	//directly on top of eachother
+	if (p_x == w_x && p_y == w_y){
+		return true;
+	}
 
 	if (p_x == w_x && p_y < w_y + scale && w_y < p_y){
 		// std::cout << "top side collision" << std::endl;
@@ -180,18 +185,48 @@ bool CollisionComponent::checkCollision(double x, double y, E_ENTITY_TYPE type){
 
 	for (auto i: m_game->colliderList)
 	{
-		if (i->getOwner()->getId() != getOwner()->getId()){
-			if (i->getOwner()->getEntityType() != type){
-				if (withinSquare(x, y, i->getX(), i->getY(), scale)){
-					return false;
+		if (i->isAlive()){
+			if (i->getOwner()->getId() != getOwner()->getId()){
+				if (i->getOwner()->getEntityType() != type){
+					if (withinSquare(x, y, i->getX(), i->getY(), scale)){
+						return false;
+					}
 				}
 			}
 		}
+	
 		
 	}
 	return true;
 }
 
+
+void	CollisionComponent::lethalCollision(double x, double y, E_ENTITY_TYPE type){
+	Game * m_game = m_owner->getWorld();
+	double scale = m_game->getScale();
+	int count = 0;
+
+	for (auto i: m_game->colliderList)
+	{
+		
+		if (i->getOwner()->getId() != getOwner()->getId()){
+			if (i->getOwner()->getEntityType() != type){
+				if (withinSquare(x, y, i->getX(), i->getY(), scale)){
+					i->kill();
+				}
+			}
+		}
+		count++;
+	}
+}
+
+void	CollisionComponent::kill(){
+	m_owner->kill();
+}
+
+bool	CollisionComponent::isAlive(){
+	return m_owner->isAlive();
+}
 
 // ================ TIMER COMPONENT ============================== //
 

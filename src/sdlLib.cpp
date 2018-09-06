@@ -106,7 +106,7 @@ void SdlLib::draw(int x, int y, double width, double height, E_COLOR color)
 	if (color == E_COLOR::COLOR_RED){
 		SDL_SetRenderDrawColor( renderer, 0xFF, 0x00, 0x00, 0xFF );
 	}        
-	else if (color == E_COLOR::COLOR_YELLOW){
+	else if (color == E_COLOR::COLOR_GREEN){
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 	}
 	else if (color == E_COLOR::COLOR_GREY){
@@ -114,6 +114,10 @@ void SdlLib::draw(int x, int y, double width, double height, E_COLOR color)
 	}
 	else if(color == E_COLOR::COLOR_BLUE){
 		SDL_SetRenderDrawColor(renderer, 0, 0, 125, 255);
+	}
+	else if (color == E_COLOR::COLOR_YELLOW){
+		SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+
 	}
 	SDL_RenderFillRect( renderer, &fillRect );
 }

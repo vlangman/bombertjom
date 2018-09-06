@@ -105,7 +105,7 @@ void	Game::stepGame(float DeltaTime){
 	//move the player
 	auto player = dynamic_cast<Player*>(this->m_Player);
 	player->movePlayer(DeltaTime);
-
+	
 	cleanUp();	
 }
 
@@ -130,20 +130,17 @@ int 	Game::runLoop(void)
 		m_Timer->update();
 		Delta = m_Timer->DeltaTime();
 		renderTime = Delta;
-		// timeStep += Delta;
 
-
+		//catch up by dropping the frame rate to compensate for long render times
 		if (renderTime < 1.0f/frameRate){
 			dropcounter--;
 			// std::cout << "\033[0;32m";
-			if (dropcounter == -frameRate && frameRate <= 1000){
+			if (dropcounter == -frameRate && frameRate <= 120){
 				last+=2;
 				frameRate+=2.0f + last;
 				dropcounter = 0;
 			}
-			
 		}
-		//catch up by dropping the frame rate to compensate for long render times
 		else{
 			// std::cout << "\033[0;31m";
 			dropcounter++;
@@ -153,7 +150,7 @@ int 	Game::runLoop(void)
 			last = 0;
 		}
 		// std::cout << "[FPS: " <<frameRate <<"]" << renderTime << " / " << 1.0f/frameRate << std::endl;
-		// std::cout << " /033[0m";
+		// std::cout << "\033[0m";
 
 
 		while(timeStep < (1.0f/frameRate)){
@@ -172,18 +169,8 @@ int 	Game::runLoop(void)
 			sdl.draw(i->getOwner()->getX(),i->getOwner()->getY(),i->getWidth(),i->getHeight(),i->getColor());
 		}
 		sdl.displayScreen();
-
-		// float FPS = 1.0f/timeStep;
 		sumTimes += timeStep;
-		if (sumTimes >= 1.0f){
-			float FPS = frameCount/sumTimes;
-			float tick = engineTick/sumTimes;
-
-			std::cout << FPS <<"/" << tick << std::endl;
-			sumTimes = 0;
-			frameCount = 0;
-			engineTick = 0;
-		}
+	
 		timeStep = 0;
 		frameCount++;
 	}
@@ -200,6 +187,7 @@ void 	Game::init(int _verbose, int width, int height, bool fullscreen){
 	this->sdl.init(width, height, this->verbose);
 	this->m_shouldRun = true;
 	//instantiates the game world
+
 	this->gameWorld.init("dank.map");
 
 	//use instance to create and reset timer
@@ -237,6 +225,7 @@ void	Game::addEntity(Entity *entity)
 }
 
 void	Game::cleanUp(void){
+
 	//INPUT HANDLER LIST;
 	for(std::vector<PlayerInputComponent*>::iterator it = inputHandlers.begin(); it!= inputHandlers.end(); /*it++*/){
 		Entity *entity = (*it)->getOwner();
@@ -253,7 +242,7 @@ void	Game::cleanUp(void){
 		Entity *entity = (*it)->getOwner();
 
 		if (!entity->isAlive()){
-
+			// std::cout <<"HERE" << std::endl;
 				delete ((*it));
 				it = renderList.erase(it);
 		}

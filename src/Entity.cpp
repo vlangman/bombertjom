@@ -34,26 +34,13 @@ void    Player::setDirection(int vertical, int horizontal){
 void	Player::movePlayer(float DeltaTime){
 	float frameRate = m_world->getFrameRate();
 	float velocity = 5.0f * m_world->getScale();
-	// std::cout << "Velocity: " << velocity << std::endl;
 	float distance = velocity * DeltaTime;
-	// std::cout << "SCALE: " <<  1.0f - DeltaTime<< std::endl;
-	
-	// float distance = velocity * DeltaTime;
-	// float scale = DeltaTime * 100000.0f/m_world->getScale() * 3;
-	//maybe check if next move is greater that game get scale
-	// if (scale > m_world->getScale()){
-	// 	std::cout << "HUGE SCALING " << scale << std::endl;
-	// 	scale =  m_world->getScale() - 1.0f;
-	// 	// exit(1);
-	// }
-
 
 	if (east){
 		// std::cout << "RIGHT" << std::endl;
 		if (collision->checkCollision(getX() + distance, getY(), ET_BOMB)){
 			setX(getX() + distance);
 		}
-		
 	}
 	if (west){
 		// std::cout << "LEFT" << std::endl;
@@ -79,9 +66,21 @@ void	Player::movePlayer(float DeltaTime){
 
 
 void	Player::placeBomb(void){
-	std::cout << "PLACING A BOMB at x: " << getX()<< " y: " << getY() << " scale is: " << m_world->getScale() << std::endl;
+
+	double scale = static_cast<double>(m_world->getScale());
+	double x = getX()/scale;
+	double y = getY()/scale;
+
+	std::cout << "Player X: " << getX() << " Player Y: " << getY() << std::endl;
+	
+
+	int Mx = nearbyint(x) * scale;
+	int My = nearbyint(y) * scale;
+	std::cout << "rounded X: " << Mx << " rounded Y: " << My << std::endl;
+
+	std::cout << "bomb X: " << Mx* scale << " bomb Y: " << My*scale << std::endl;
 	Builder * builder = new Builder(m_world);
-	builder->createBomb(getX(), getY(), m_world->getScale(), m_world->getScale());
+	builder->createBomb(Mx,My, m_world->getScale(), m_world->getScale());
 	delete builder;
 
 	return;
@@ -169,6 +168,10 @@ int	Entity::getId(void){
 	return id;
 }
 
+void Entity::kill(void){
+	mIsAlive = false;
+}
+
 // ============================== BOMB ================================ //
 
 
@@ -193,8 +196,9 @@ Bomb & Bomb::operator=(const Bomb & _rhs){
 
 
 //usefull constructors
-Bomb::Bomb(Game *world) : Entity(world)
+Bomb::Bomb(Game *world, int raduis) : Entity(world)
 {
+	mRaduis = raduis;
 	mType = ET_BOMB;
 }
 
@@ -203,9 +207,32 @@ Bomb::Bomb(Game *world) : Entity(world)
 void	Bomb::update(void){
 	timer->UpdateElapsed(m_world->getDeltaTime());
 	if (timer->checkTimer(3.0f)){
-		mIsAlive = false;
+		detonate();
+		timer->Reset();
 	}
 	return;
+}
+
+void   Bomb::detonate(void){
+	std::cout << "KABOOM!"<< std::endl;
+	float scale = m_world->getScale();
+	for (int i = mRaduis; i > 0; i--){
+		// bool	checkCollision(double x, double y, E_ENTITY_TYPE type);
+		double dist = static_cast<double>(i*scale);
+		//check up
+		// std::cout << "check above: "<< getX() << " Y: " << getY() - dist << std::endl;
+		collision->lethalCollision(getX(),getY()-dist, ET_BOMB);
+		// check down
+		// std::cout << "check below: "<< getX() << " Y: " << getY() + dist << std::endl;
+		collision->lethalCollision(getX(),getY()+dist, ET_BOMB);
+		// check left
+		// std::cout << "check left: "<< getX() - dist << " Y: " << getY() << std::endl;
+		collision->lethalCollision(getX() - dist,getY(), ET_BOMB);
+		// check right
+		// std::cout << "check right: "<< getX() + dist << " Y: " << getY() << std::endl;
+		collision->lethalCollision(getX() + dist,getY(), ET_BOMB);
+	}
+	mIsAlive = false;
 }
 
 // ============================== ENEMY ================================ //

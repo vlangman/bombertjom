@@ -61,8 +61,11 @@ public:
 	CollisionComponent(Entity *owner);
 	void	update();
 	bool	checkCollision(double x, double y, E_ENTITY_TYPE type);
+	void	lethalCollision(double x, double y, E_ENTITY_TYPE type);
 	double	getX(void);
 	double	getY(void);
+	void	kill(void);
+	bool 	isAlive(void);
 };
 
 

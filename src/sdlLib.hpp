@@ -8,10 +8,11 @@ class GraphicsComponent;
 
 enum E_COLOR 
 {
-	COLOR_YELLOW,
+	COLOR_GREEN,
 	COLOR_RED,
 	COLOR_GREY,
-	COLOR_BLUE
+	COLOR_BLUE,
+	COLOR_YELLOW,
 };
 
 enum E_EVENT 

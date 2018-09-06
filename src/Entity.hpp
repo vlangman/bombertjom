@@ -2,6 +2,7 @@
 #include "Builder.hpp"
 #include "timer.hpp"
 #include <vector>
+#include <math.h>
 
 class Game;
 class RenderDescription;
@@ -46,9 +47,10 @@ public:
 	void setX(double x);
 	void setY(double y);
 	void setPosition(double x, double y);
-
 	void setWidth(float _width);
 	void setHeight(float _height);
+	void kill(void);
+
 	float getWidth(void) const;
 	float getHeight(void) const;
 	bool  isAlive(void);
@@ -93,8 +95,9 @@ public:
 
 class Bomb : public Entity 
 {
+private:
+	int mRaduis;
 public:
-
 	//COMPONENTS
 	GraphicsComponent *graphics;
 	CollisionComponent *collision;
@@ -107,10 +110,11 @@ public:
 	Bomb & operator=(const Bomb & _rhs);
 
 	//usefull constructors
-	Bomb(Game *world);
+	Bomb(Game *world, int raduis);
 
 	//BOMB FUNCTIONS
 	void	update();
+	void	detonate(void);
 };
 
 

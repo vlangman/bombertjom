@@ -12,7 +12,7 @@ Entity *Builder::createPlayer(double x, double y, double width, double height)
 	Player *player = new Player(m_world);
 
 	// init graphics component
-	player->graphics = new GraphicsComponent(player, E_COLOR::COLOR_RED, width, height);
+	player->graphics = new GraphicsComponent(player, E_COLOR::COLOR_GREEN, width, height);
 	// init input handler
 	player->inputHandler = new PlayerInputComponent(player);
 
@@ -41,12 +41,12 @@ Entity *Builder::createWall(double x, double y, double width, double height)
 
 Entity *Builder::createBomb(double x, double y, double width, double height){
 
-	Bomb *bomb = new Bomb(m_world);
+	Bomb *bomb = new Bomb(m_world, 1);
 
 	bomb->setWidth(width);
 	bomb->setHeight(height);
 
-	bomb->graphics = new GraphicsComponent(bomb, E_COLOR::COLOR_YELLOW, width, height);
+	bomb->graphics = new GraphicsComponent(bomb, E_COLOR::COLOR_RED, width, height);
 	bomb->timer = new TimerComponent(bomb);
 	bomb->collision = new CollisionComponent(bomb);
 
