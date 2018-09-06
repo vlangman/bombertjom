@@ -287,26 +287,21 @@ void Enemy::update(void){
 void Enemy::newDirection(void){
 
 	std::vector<int> validMoves;
-	float frameRate = m_world->getFrameRate();
 	float DeltaTime = m_world->getDeltaTime();
-	if (DeltaTime > 1.0f/frameRate){
-		DeltaTime = 1.0f/frameRate;
-	}
+	float frameRate = m_world->getFrameRate();
+	float velocity = 3.0f * m_world->getScale();
+	float distance = velocity * DeltaTime;
 
-	float scale = DeltaTime * 100000.0f;
-	if (scale > m_world->getScale()){
-		scale =  m_world->getScale() - 1.0f;
-	}
-	if (collision->checkCollision(getX() + scale, getY(), ET_NONE)){
+	if (collision->checkCollision(getX() + distance, getY(), ET_NONE)){
 		validMoves.push_back(1);
 	}
-	if (collision->checkCollision(getX() - scale, getY(), ET_NONE)){
+	if (collision->checkCollision(getX() - distance, getY(), ET_NONE)){
 		validMoves.push_back(2);
 	}
-	if (collision->checkCollision(getX(), getY() + scale, ET_NONE)){
+	if (collision->checkCollision(getX(), getY() + distance, ET_NONE)){
 		validMoves.push_back(3);
 	}
-	if (collision->checkCollision(getX(), getY() - scale, ET_NONE)){
+	if (collision->checkCollision(getX(), getY() - distance, ET_NONE)){
 		validMoves.push_back(4);
 	}
 
