@@ -12,6 +12,33 @@ Game::Game(void){
 
 
 Game::~Game(void){
+	// for (auto i: entityList){
+	// 	// if (i->getEntityType() == E_ENTITY_TYPE::ET_ENEMY){
+	// 	// 	std::cout << i->getX() << std::endl;
+	// 	// }
+	// 	if (i){
+	// 		std::cout << i->getX() << " X pos "<< std::endl;
+	// 		std::cout << i->getY() << " y pos "<< std::endl;
+	// 		std::cout << i->isAlive() << " alive "<< std::endl;
+	// 		std::cout << i->getEntityType() << " type "<< std::endl;
+	// 	}
+	// }
+	Student one;
+	std::ofstream ofs("save.data", std::ios::binary);
+
+	for (auto i: entityList) {
+		one.mapSize = this->mapSize;
+
+		one.Xpos = i->getX() / getScale();
+
+		one.Ypos = i->getY() / getScale();
+
+
+		one.type = i->getEntityType();
+		
+		ofs.write((char *)&one, sizeof(one));
+	}
+
 	return;
 }
 
@@ -52,6 +79,7 @@ void	Game::buildGameObjects(void){
 	double		increment_y = static_cast<double>(this->window_y) / map.size();
 	double		increment_x =  static_cast<double>(this->window_x) / map.size();
 	this->scale = increment_y;
+	this->mapSize = map.size();
 
 	
 	// read map from gameworld into game entities
@@ -78,6 +106,43 @@ void	Game::buildGameObjects(void){
 	Entity *player = builder.createPlayer( increment_x,  increment_y,  increment_x,  increment_y);
 	addEntity(player);
 	this->m_Player = player;
+}
+
+void	Game::buildFromSave(void){
+
+	Student two;
+	std::ifstream ifs("save.data", std::ios::binary);
+		Builder 	builder(this);
+		
+		while(ifs.read((char *)&two, sizeof(two))){
+				double		increment_y = static_cast<double>(this->window_y) / two.mapSize;
+				double		increment_x =  static_cast<double>(this->window_x) / two.mapSize;
+				this->scale = increment_y;
+				std::cout << "x cord: " << two.Xpos << " y cord: " << two.Ypos << " type: " << two.type << " END\n";
+		// read map from gameworld into game entities
+
+				//if the number read is a 1 (ascii 49)
+			
+				if (two.type == 1)
+				{
+					Entity *wall = builder.createWall(two.Xpos*increment_x,two.Ypos*increment_y,increment_x, increment_y);
+					addEntity(wall);
+				}
+				//if the number read is a 3 (ascii 50)
+
+				if (two.type == 3)
+				{
+					Entity *enemy = builder.createEnemy(two.Xpos*increment_x,two.Ypos*increment_y,increment_x, increment_y);
+					addEntity(enemy);
+				}
+				if (two.type == 0)
+				{
+					Entity *player = builder.createPlayer( two.Xpos*increment_x,two.Ypos*increment_y,  increment_x,  increment_y);
+					addEntity(player);
+					this->m_Player = player;
+				}
+		}
+		this->mapSize = two.mapSize;
 }
 
 //game loop functions
@@ -113,7 +178,7 @@ void	Game::stepGame(float DeltaTime){
 int 	Game::runLoop(void)
 {
 
-	buildGameObjects();
+	
 	m_Timer->Reset();
 	float timeStep = 0.0f;
 	float Delta = 0.0f;
@@ -192,7 +257,8 @@ int 	Game::runLoop(void)
 }
 
 
-void 	Game::init(int _verbose, int width, int height, bool fullscreen){
+void 	Game::init(int _verbose, int width, int height, bool saveGame){
+	
 	this->verbose = _verbose;
 	this->window_x = width;
 	this->window_y = height;
@@ -200,8 +266,14 @@ void 	Game::init(int _verbose, int width, int height, bool fullscreen){
 	this->sdl.init(width, height, this->verbose);
 	this->m_shouldRun = true;
 	//instantiates the game world
-	this->gameWorld.init("dank.map");
-
+	this->gameWorld.init("test2.map");
+	
+	if (saveGame) {
+		std::cout << "yes\n";
+		buildFromSave();
+	}
+	else
+		buildGameObjects();
 	//use instance to create and reset timer
 	m_Timer = Timer::Instance();
 	return;

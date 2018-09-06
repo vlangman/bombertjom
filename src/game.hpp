@@ -2,6 +2,7 @@
 #include <iostream>
 #include "sdlLib.hpp"
 #include "gameWorld.hpp"
+#include "saveGame.hpp"
 #include "timer.hpp"
 #include <vector>
 #include <unistd.h>
@@ -28,6 +29,7 @@ class Game
 		Entity 			*m_Player;
 		double			scale;
 		int				entityCount;
+		int				mapSize;
 
 	public:
 		std::vector<Entity*> entityList;
@@ -51,7 +53,7 @@ class Game
 
 		//game loop functions
 		int 	runLoop(void);
-		void 	init(int _verbose = 0, int width = 500, int height = 500, bool fullscreen = 0);
+		void 	init(int _verbose = 0, int width = 500, int height = 500, bool saveGame = 0);
 		void 	handleEvents(void);
 		void	closeGame(void);
 		void	stepGame(float DeltaTime);
@@ -61,6 +63,7 @@ class Game
 		void	log(std::string message);
 		float	getDeltaTime(void);
 		void	buildGameObjects(void);
+		void	buildFromSave(void);
 		void	addEntity(Entity *entity);
 		
 		
