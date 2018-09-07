@@ -16,11 +16,10 @@ int main(int argc, char **argv) {
 			std::cout << "Press 4 to start\n";
 
 			std::cin >> answer;
-			bool saveGame = false;
 			if (answer == 1)
 				game.init();
 			else if (answer == 2)
-				game.init(1,  500,  500, saveGame = true);
+				game.init(1,  500,  500, 1);
 			else if (answer == 4) {
 				std::cout << "exiting\n";
 				return 0;
