@@ -13,9 +13,9 @@ class Student
 
 public:
 
-	int		Xpos;
-	int		Ypos;
-	int		mapSize;
-	int		type;
+	float		Xpos;
+	float		Ypos;
+	int			mapSize;
+	int			type;
 
 };

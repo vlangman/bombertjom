@@ -140,6 +140,8 @@ void	Game::buildFromSave(void){
 					Entity *player = builder.createPlayer( two.Xpos*increment_x,two.Ypos*increment_y,  increment_x,  increment_y);
 					addEntity(player);
 					this->m_Player = player;
+					auto test = dynamic_cast<Player*>(m_Player);
+					test->setDirection(0,0);
 				}
 		}
 		this->mapSize = two.mapSize;
