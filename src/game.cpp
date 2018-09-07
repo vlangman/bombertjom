@@ -115,34 +115,31 @@ void	Game::buildFromSave(void){
 		Builder 	builder(this);
 		
 		while(ifs.read((char *)&read, sizeof(read))){
-				double		increment_y = static_cast<double>(this->window_y) / read.mapSize;
-				double		increment_x =  static_cast<double>(this->window_x) / read.mapSize;
-				this->scale = increment_y;
-				std::cout << "x cord: " << read.Xpos << " y cord: " << read.Ypos << " type: " << read.type << " END\n";
-		// read map from gameworld into game entities
+			double		increment_y = static_cast<double>(this->window_y) / read.mapSize;
+			double		increment_x =  static_cast<double>(this->window_x) / read.mapSize;
+			this->scale = increment_y;
+			// read map from gameworld into game entities
 
-				//if the number read is a 1 (ascii 49)
-			
-				if (read.type == 1)
-				{
-					Entity *wall = builder.createWall(read.Xpos*increment_x,read.Ypos*increment_y,increment_x, increment_y);
-					addEntity(wall);
-				}
-				//if the number read is a 3 (ascii 50)
-
-				if (read.type == 3)
-				{
-					Entity *enemy = builder.createEnemy(read.Xpos*increment_x,read.Ypos*increment_y,increment_x, increment_y);
-					addEntity(enemy);
-				}
-				if (read.type == 0)
-				{
-					Entity *player = builder.createPlayer( read.Xpos*increment_x,read.Ypos*increment_y,  increment_x,  increment_y);
-					addEntity(player);
-					this->m_Player = player;
-					auto test = dynamic_cast<Player*>(m_Player);
-					test->setDirection(0,0);
-				}
+			//if the number read is a 1 (ascii 49)
+			if (read.type == 1)
+			{
+				Entity *wall = builder.createWall(read.Xpos*increment_x,read.Ypos*increment_y,increment_x, increment_y);
+				addEntity(wall);
+			}
+			//if the number read is a 3 (ascii 50)
+			if (read.type == 3)
+			{
+				Entity *enemy = builder.createEnemy(read.Xpos*increment_x,read.Ypos*increment_y,increment_x, increment_y);
+				addEntity(enemy);
+			}
+			if (read.type == 0)
+			{
+				Entity *player = builder.createPlayer( read.Xpos*increment_x,read.Ypos*increment_y,  increment_x,  increment_y);
+				addEntity(player);
+				this->m_Player = player;
+				auto test = dynamic_cast<Player*>(m_Player);
+				test->setDirection(0,0);
+			}
 		}
 		this->mapSize = read.mapSize;
 }
@@ -268,14 +265,14 @@ void 	Game::init(int _verbose, int width, int height, bool saveGame){
 	this->sdl.init(width, height, this->verbose);
 	this->m_shouldRun = true;
 	//instantiates the game world
-	this->gameWorld.init("test2.map");
+	this->gameWorld.init("dank.map");
 	
 	if (saveGame) {
-		std::cout << "yes\n";
 		buildFromSave();
 	}
 	else
 		buildGameObjects();
+
 	//use instance to create and reset timer
 	m_Timer = Timer::Instance();
 	return;
