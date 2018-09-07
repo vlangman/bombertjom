@@ -7,7 +7,7 @@
 
 
 
-class Student
+class SaveGame
 
 {
 

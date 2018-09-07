@@ -23,20 +23,20 @@ Game::~Game(void){
 	// 		std::cout << i->getEntityType() << " type "<< std::endl;
 	// 	}
 	// }
-	Student one;
+	SaveGame save;
 	std::ofstream ofs("save.data", std::ios::binary);
 
 	for (auto i: entityList) {
-		one.mapSize = this->mapSize;
+		save.mapSize = this->mapSize;
 
-		one.Xpos = i->getX() / getScale();
+		save.Xpos = i->getX() / getScale();
 
-		one.Ypos = i->getY() / getScale();
+		save.Ypos = i->getY() / getScale();
 
 
-		one.type = i->getEntityType();
+		save.type = i->getEntityType();
 		
-		ofs.write((char *)&one, sizeof(one));
+		ofs.write((char *)&save, sizeof(save));
 	}
 
 	return;
@@ -110,41 +110,41 @@ void	Game::buildGameObjects(void){
 
 void	Game::buildFromSave(void){
 
-	Student two;
+	SaveGame read;
 	std::ifstream ifs("save.data", std::ios::binary);
 		Builder 	builder(this);
 		
-		while(ifs.read((char *)&two, sizeof(two))){
-				double		increment_y = static_cast<double>(this->window_y) / two.mapSize;
-				double		increment_x =  static_cast<double>(this->window_x) / two.mapSize;
+		while(ifs.read((char *)&read, sizeof(read))){
+				double		increment_y = static_cast<double>(this->window_y) / read.mapSize;
+				double		increment_x =  static_cast<double>(this->window_x) / read.mapSize;
 				this->scale = increment_y;
-				std::cout << "x cord: " << two.Xpos << " y cord: " << two.Ypos << " type: " << two.type << " END\n";
+				std::cout << "x cord: " << read.Xpos << " y cord: " << read.Ypos << " type: " << read.type << " END\n";
 		// read map from gameworld into game entities
 
 				//if the number read is a 1 (ascii 49)
 			
-				if (two.type == 1)
+				if (read.type == 1)
 				{
-					Entity *wall = builder.createWall(two.Xpos*increment_x,two.Ypos*increment_y,increment_x, increment_y);
+					Entity *wall = builder.createWall(read.Xpos*increment_x,read.Ypos*increment_y,increment_x, increment_y);
 					addEntity(wall);
 				}
 				//if the number read is a 3 (ascii 50)
 
-				if (two.type == 3)
+				if (read.type == 3)
 				{
-					Entity *enemy = builder.createEnemy(two.Xpos*increment_x,two.Ypos*increment_y,increment_x, increment_y);
+					Entity *enemy = builder.createEnemy(read.Xpos*increment_x,read.Ypos*increment_y,increment_x, increment_y);
 					addEntity(enemy);
 				}
-				if (two.type == 0)
+				if (read.type == 0)
 				{
-					Entity *player = builder.createPlayer( two.Xpos*increment_x,two.Ypos*increment_y,  increment_x,  increment_y);
+					Entity *player = builder.createPlayer( read.Xpos*increment_x,read.Ypos*increment_y,  increment_x,  increment_y);
 					addEntity(player);
 					this->m_Player = player;
 					auto test = dynamic_cast<Player*>(m_Player);
 					test->setDirection(0,0);
 				}
 		}
-		this->mapSize = two.mapSize;
+		this->mapSize = read.mapSize;
 }
 
 //game loop functions
