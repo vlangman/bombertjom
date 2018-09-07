@@ -1,11 +1,5 @@
 #include "game.hpp"
 
-enum GameState {
-		GAME_ACTIVE,
-		GAME_MENU,
-		GAME_WIN
-	};
-
 int main(int argc, char **argv) {
 
 	Game game;

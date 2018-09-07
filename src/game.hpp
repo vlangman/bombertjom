@@ -7,6 +7,11 @@
 #include <vector>
 #include <unistd.h>
 
+enum GameState {
+		GAME_ACTIVE,
+		GAME_MENU,
+		GAME_WIN
+	};
 
 class PlayerInputComponent;
 class GraphicsComponent;
