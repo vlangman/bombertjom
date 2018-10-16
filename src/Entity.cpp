@@ -1,65 +1,73 @@
 #include "Entity.hpp"
-#include "Component.hpp"
 
-
-// =============================== PLAYER =============================== //
-void Player::update()
+Entity::Entity()
 {
-    graphics->update();
+    m_shader = NULL;
+    m_model = NULL;
+    type = BOX_ENTITY;
+    mRotation = 0;
 }
 
-Player::Player(Game *world)
-:Entity(world)
+/*void Entity::setShader(std::string vertPath, std::string fragPath)
 {
-    mType = ET_PLAYER;
+    if (m_shader != NULL)
+        delete m_shader;
+
+    m_shader = new GameBoi::graphics::Shader(vertPath, fragPath);
+    m_shader->use();
+}
+void Entity::setModel(std::string modelPath)
+{
+    if (m_model != NULL)
+        delete m_model;
+    
+    m_model = new GameBoi::graphics::Model(modelPath);
+}*/
+
+glm::vec3 Entity::getPosition()
+{
+    return mPosition;
 }
 
-// =============================== WALL =============================== //
-void Wall::update() 
+void Entity::setShader(GameBoi::graphics::Shader *shader)
 {
-
+    m_shader = shader;
+    m_shader->use();
+}
+void Entity::setModel(GameBoi::graphics::Model *model)
+{
+    m_model = model;
 }
 
-Wall::Wall(Game *world)
-:Entity(world)
+void Entity::setPosition(float x, float y, float z)
 {
-    mType = ET_WALL;
+    mPosition = glm::vec3(x, y, z);
+}
+void Entity::setScale(float x, float y, float z)
+{
+    mScale = glm::vec3(x, y, z);
 }
 
-// ============================== ENTITY ================================ //
-Entity::Entity(Game *world)
+void Entity::render( glm::mat4 &projection,  glm::mat4 &view)
 {
-    m_world = world;
-    mType = ET_NONE;
+    m_shader->setMat4("projection", projection);
+    m_shader->setMat4("view", view);
+    
+        // calculate the model matrix for each object and pass it to shader before drawing
+    m_model->NewPostionAndScale(mPosition, mScale, mRotation);
+    m_model->DrawAndSet(*m_shader, "model");   
 }
 
-E_ENTITY_TYPE Entity::getEntityType()
+void Entity::rotate(float rot)
 {
-    return mType;
+    mRotation = rot;
 }
 
-void Entity::setX(double x)
+GameBoi::graphics::Shader * Entity::getShader()
 {
-    mX = x;
+    return m_shader;
 }
-
-void Entity::setY(double y)
+GameBoi::graphics::Model * Entity::getModel()
 {
-    mY = y;
-}
-
-void Entity::setPosition(double x, double y)
-{
-    mX = x;
-    mY = y;
-}
-
-double Entity::getX()
-{
-    return mX;
-}
-
-double Entity::getY()
-{
-    return mY;
+    return m_model;
 }

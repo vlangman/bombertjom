@@ -1,0 +1,1 @@
+install_name_tool -change /usr/local/lib/libirrklang.dylib @executable_path/_deps/irrklang/bin/macosx-gcc/libirrklang.dylib Bomberman

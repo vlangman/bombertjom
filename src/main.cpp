@@ -1,24 +1,24 @@
-#include "game.hpp"
+#include "../GameEngine/graphics/includes/Functions.hpp"
+#include "../GameEngine/graphics/includes/Shader.hpp"
+#include "../GameEngine/utils/includes/timer.hpp"
+#include "../GameEngine/graphics/src/Textures.cpp"
+#include "../GameEngine/graphics/includes/Camera.hpp"
+#include "../GameEngine/graphics/includes/Models.hpp"
 
+#include "Entity.hpp"
+#include "ResourceManager.hpp"
+#include "GameWorld.hpp"
 
-int main(int argc, char **argv) {
-
-	Game game;
-
-
-	//init with verbose enabled
-	if (argc != 3){
-		std::cout << "bad args.. starting game with defaults" << std::endl;
-		game.init();
-	}
-	else
-	{
-		game.init(1, std::atoi(argv[1]), std::atoi(argv[2]), 0);
-	}
-
-	game.runLoop();
-
-	game.log("he he xD");
-	game.runLoop();
+#include <iostream>
 	
+	
+int main() 
+{
+	GameWorld *gameWorld = new GameWorld();
+
+	gameWorld->init("dank.map");
+
+	gameWorld->runLoop();
+
+    return 0;
 }

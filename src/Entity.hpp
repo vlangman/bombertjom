@@ -1,59 +1,44 @@
 #pragma once
+#include "../GameEngine/graphics/includes/Shader.hpp"
+#include "../GameEngine/graphics/includes/Models.hpp"
 #include <vector>
 
-class Game;
-class RenderDescription;
-class Component;
-class GraphicsComponent;
-class PlayerInputComponent;
 
-enum E_ENTITY_TYPE 
+enum ENTITY_TYPE 
 {
-    ET_PLAYER,
-    ET_WALL,
-    ET_NONE
+    BOX_ENTITY, 
+    PLAYER_ENTITY
 };
 
-class Entity
-{
-protected:
-    double mX;
-    double mY;
-    E_ENTITY_TYPE mType;
-    Game *m_world;
-
-public:
-    Entity(Game *world);
-    virtual void update() = 0;
-    
-    double getX();
-    double getY();
-
-    void setX(double x);
-    void setY(double y);
-    void setPosition(double x, double y);
-
-    Game *getWorld();
-
-    E_ENTITY_TYPE getEntityType();
-};
-
-class Player : public Entity 
+class Entity 
 {
 private:
-public: 
-    Player(Game *world);
+    GameBoi::graphics::Shader *m_shader;
+    GameBoi::graphics::Model *m_model;
 
-    GraphicsComponent *graphics;
-    PlayerInputComponent *inputHandler;
-    void update();
-};
-
-class Wall : public Entity 
-{
-private: 
+    glm::vec3 mPosition;
+    glm::vec3 mScale;
+    float mRotation;
 public:
-    Wall(Game *world);
-    GraphicsComponent *graphics;
-    void update();
+    ENTITY_TYPE type;
+    Entity();
+
+    //void setShader(std::string vertPath, std::string fragPath);
+    //void setModel(std::string modelPath);
+
+    void setShader(GameBoi::graphics::Shader *shader);
+    void setModel(GameBoi::graphics::Model *model);
+
+    void setPosition(float x, float y, float z);
+    void setScale(float x, float y, float z);
+
+    void rotate(float rot);
+
+    glm::vec3 getPosition();
+
+    void render( glm::mat4 &projection,  glm::mat4 &view);
+
+    GameBoi::graphics::Shader *getShader();
+    GameBoi::graphics::Model *getModel();
+
 };
